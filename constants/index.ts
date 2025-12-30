@@ -1,4 +1,4 @@
-import { ExerciseType, BodyPartExercise } from "@/types";
+import { ExerciseType, BodyPartExercise, WorkoutType } from "@/types";
 
 export const sliderImages = [
   require("../assets/images/slide-one.png"),
@@ -17,6 +17,8 @@ export const week = [
   "Saturday",
   "Sunday",
 ];
+
+export const workoutTypes: WorkoutType[] = ["Weights", "Cable", "Bodyweight"];
 
 export const bodyParts: ExerciseType[] = [
   {
