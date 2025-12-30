@@ -69,6 +69,7 @@ const editWorkout = () => {
       workout.day === "" ||
       workout.sets === "" ||
       workout.reps === "" ||
+      workout.type === "" ||
       (workout.type !== "Bodyweight" && workout.weight === "")
     ) {
       setError("Please enter required fields");
