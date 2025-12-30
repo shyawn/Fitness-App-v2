@@ -47,6 +47,8 @@ export default function DraggableList({
   function renderItem(info: DragListRenderItemInfo<Workout>) {
     const { item, onDragStart, onDragEnd } = info;
 
+    const isWeight = item.weight && item.type !== "Bodyweight";
+
     return (
       <TouchableOpacity
         key={item.id}
@@ -59,9 +61,9 @@ export default function DraggableList({
             {item.name}
           </Text>
           <Text className="text-[#636363]">
-            {item.sets} x {item.reps} reps ({item.weight}
-            {item.weight && " "}
-            {item.weight ? "kg" : "bodyweight"})
+            {item.sets} x {item.reps} reps ({isWeight && item.weight}
+            {isWeight && " "}
+            {isWeight ? "kg" : "bodyweight"})
           </Text>
         </View>
 
