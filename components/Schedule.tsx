@@ -4,6 +4,7 @@ import { StyleSheet } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import moment from "moment";
 import Swiper from "react-native-swiper";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 interface DateItem {
   weekday: string;
@@ -56,7 +57,10 @@ export default function Schedule({
 
   return (
     <View>
-      <Text className="text-left text-[26px] font-semibold text-neutral-700 mb-3 pl-6">
+      <Text
+        style={{ fontSize: hp(4) }}
+        className="text-left font-semibold text-neutral-700 mb-3 pl-6"
+      >
         My Schedule
       </Text>
 
@@ -94,7 +98,9 @@ export default function Schedule({
         </Swiper>
       </View>
       <View className="pl-6">
-        <Text style={styles.contentText}>{value.toDateString()}</Text>
+        <Text className="text-gray-500" style={styles.contentText}>
+          {value.toDateString()}
+        </Text>
       </View>
     </View>
   );
@@ -109,7 +115,6 @@ const styles = StyleSheet.create({
   contentText: {
     fontSize: 17,
     fontWeight: 600,
-    color: "#999",
     marginBottom: 12,
   },
   item: {
@@ -120,6 +125,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     borderWidth: 1,
     borderColor: "#e3e3e3",
+    backgroundColor: "#fff",
     borderRadius: 8,
     alignItems: "center",
     flexDirection: "column",
