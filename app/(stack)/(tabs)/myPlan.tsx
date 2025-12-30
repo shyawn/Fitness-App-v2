@@ -3,11 +3,8 @@ import { RootState } from "@/store/store";
 import { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
 import { Workout } from "@/types";
@@ -32,17 +29,21 @@ export default function MyPlan() {
     setModalVisible(!modalVisible);
   };
 
+  const filteredWorkoutList = workoutList.filter((item) =>
+    item.day.includes(value.toDateString().split(" ")[0])
+  );
+
   return (
     <SafeAreaView
       style={{ flexDirection: "row" }}
-      className="mt-10 space-y-5"
+      className="space-y-5"
       edges={["top"]}
     >
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <View style={styles.container}>
         <Schedule value={value} setValue={setValue} />
 
-        {workoutList.length === 0 ? (
+        {filteredWorkoutList.length === 0 ? (
           <Text className="font-semibold text-gray-500 top-full">
             Add your workout plan
           </Text>
@@ -92,5 +93,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 8,
   },
 });

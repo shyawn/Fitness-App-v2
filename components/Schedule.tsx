@@ -1,23 +1,32 @@
 import { View, Text, TouchableWithoutFeedback } from "react-native";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import moment from "moment";
 import Swiper from "react-native-swiper";
 
-export default function Schedule({ value, setValue }) {
-  const swiper = useRef(null);
+interface DateItem {
+  weekday: string;
+  date: Date;
+}
+
+export default function Schedule({
+  value,
+  setValue,
+}: {
+  value: Date;
+  setValue: (date: Date) => void;
+}) {
+  const swiper = useRef<Swiper | null>(null);
 
   const [week, setWeek] = useState(0);
 
   const weeks = useMemo(() => {
-    const start = moment(start).add(week, "weeks").startOf("week");
+    const base = moment().add(week, "weeks").startOf("week"); // anchor = today
+
     return [-1, 0, 1].map((adj) => {
       return Array.from({ length: 7 }).map((_, index) => {
-        const date = moment(start).add(adj, "week").add(index, "day");
+        const date = moment(base).add(adj, "week").add(index, "day");
         return {
           weekday: date.format("ddd"),
           date: date.toDate(),
@@ -25,9 +34,29 @@ export default function Schedule({ value, setValue }) {
       });
     });
   }, [week]);
+
+  const renderDay = useCallback(
+    (item: DateItem, idx: number) => {
+      const isActive = value.toDateString() === item.date.toDateString();
+      return (
+        <TouchableWithoutFeedback key={idx} onPress={() => setValue(item.date)}>
+          <View style={[styles.item, isActive && styles.activeItem]}>
+            <Text style={[styles.itemWeekday, isActive && styles.activeText]}>
+              {item.weekday}
+            </Text>
+            <Text style={[styles.itemDate, isActive && styles.activeText]}>
+              {item.date.getDate()}
+            </Text>
+          </View>
+        </TouchableWithoutFeedback>
+      );
+    },
+    [value]
+  );
+
   return (
     <View>
-      <Text className="text-left text-[26px] font-semibold text-[#1d1d1d] mb-3 pl-6">
+      <Text className="text-left text-[26px] font-semibold text-neutral-700 mb-3 pl-6">
         My Schedule
       </Text>
 
@@ -46,7 +75,7 @@ export default function Schedule({ value, setValue }) {
               const newWeek = week + newIndex;
               setWeek(newWeek);
               setValue(moment(value).add(newIndex, "week").toDate());
-              swiper.current.scrollTo(1, false);
+              swiper.current?.scrollTo(1, false);
             }, 100);
           }}
         >
@@ -59,41 +88,7 @@ export default function Schedule({ value, setValue }) {
               ]}
               className="flex flex-row items-start justify-between"
             >
-              {dates.map((item, dateIndex) => {
-                const isActive =
-                  value.toDateString() === item.date.toDateString();
-                return (
-                  <TouchableWithoutFeedback
-                    key={dateIndex}
-                    onPress={() => setValue(item.date)}
-                  >
-                    <View
-                      style={[
-                        styles.item,
-                        isActive && {
-                          backgroundColor: "#111",
-                          borderColor: "#111",
-                        },
-                      ]}
-                      key={index}
-                    >
-                      <Text
-                        style={[
-                          styles.itemWeekday,
-                          isActive && { color: "#fff" },
-                        ]}
-                      >
-                        {item.weekday}
-                      </Text>
-                      <Text
-                        style={[styles.itemDate, isActive && { color: "#fff" }]}
-                      >
-                        {item.date.getDate()}
-                      </Text>
-                    </View>
-                  </TouchableWithoutFeedback>
-                );
-              })}
+              {dates.map((item, idx) => renderDay(item, idx))}
             </View>
           ))}
         </Swiper>
@@ -139,5 +134,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 600,
     color: "#111",
+  },
+  activeItem: {
+    backgroundColor: "#111",
+    borderColor: "#111",
+  },
+  activeText: {
+    color: "#fff",
   },
 });

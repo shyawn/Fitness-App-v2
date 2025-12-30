@@ -46,7 +46,7 @@ export default function Index() {
           <TouchableOpacity
             style={{ height: hp(7), width: wp(80) }}
             onPress={() => router.push("/home")}
-            className="bg-rose-500 flex items-center justify-center mx-auto rounded-full border-[2px] border-neutral-200"
+            className="bg-rose-500 flex items-center justify-center mx-auto rounded-full border-[1px] border-neutral-200"
           >
             <Text
               style={{ fontSize: hp(3) }}
