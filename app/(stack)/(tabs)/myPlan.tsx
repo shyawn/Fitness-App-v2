@@ -8,26 +8,19 @@ import Ionicons from "@react-native-vector-icons/ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
 import { Workout } from "@/types";
-import WorkoutModal from "@/components/WorkoutModal";
 import Schedule from "@/components/Schedule";
 import { StatusBar } from "expo-status-bar";
 import EditWorkoutModal from "@/components/EditWorkoutModal";
+import { useRouter } from "expo-router";
 
 export default function MyPlan() {
-  const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [editWorkout, setEditWorkout] = useState({});
   const [value, setValue] = useState(new Date());
 
   const dispatch = useDispatch();
+  const router = useRouter();
   const workoutList = useSelector((state: RootState) => state.workout);
-
-  const toggleModal = () => {
-    // console.log("LENGTH:", workoutList.length);
-    // console.log("workoutlist: ", workoutList);
-    // console.log("API: ", process.env.EXPO_RAPID_API_KEY);
-    setModalVisible(!modalVisible);
-  };
 
   const filteredWorkoutList = workoutList.filter((item) =>
     item.day.includes(value.toDateString().split(" ")[0])
@@ -44,8 +37,8 @@ export default function MyPlan() {
         <Schedule value={value} setValue={setValue} />
 
         {filteredWorkoutList.length === 0 ? (
-          <Text className="font-semibold text-gray-500 top-full">
-            Add your workout plan
+          <Text className="text-center font-semibold text-[16px] text-[#999] top-full">
+            {`No workouts for today.\n\nRemember to get sufficient rest!`}
           </Text>
         ) : (
           <View style={{ flexDirection: "row" }}>
@@ -63,19 +56,12 @@ export default function MyPlan() {
         )}
 
         <TouchableOpacity
-          onPress={toggleModal}
+          onPress={() => router.push({ pathname: "/editWorkout" })}
           className="absolute p-1 right-7 top-32 bg-[#A9A9A9] rounded-full"
         >
           <Ionicons name="add" size={wp(5)} color="white" />
         </TouchableOpacity>
       </View>
-
-      {modalVisible && (
-        <WorkoutModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        />
-      )}
 
       {editModalVisible && (
         <EditWorkoutModal
