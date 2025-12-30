@@ -1,3 +1,5 @@
+import { ExerciseType, BodyPartExercise } from "@/types";
+
 export const sliderImages = [
   require("../assets/images/slide-one.png"),
   require("../assets/images/slide-two.png"),
@@ -16,7 +18,7 @@ export const week = [
   "Sunday",
 ];
 
-export const bodyParts = [
+export const bodyParts: ExerciseType[] = [
   {
     name: "back",
     image: require("../assets/images/back.png"),
@@ -59,7 +61,7 @@ export const bodyParts = [
   },
 ];
 
-export const dummyExercises = [
+export const dummyExercises: BodyPartExercise[] = [
   {
     bodyPart: "back",
     equipment: "cable",

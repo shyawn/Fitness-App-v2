@@ -1,4 +1,4 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {
@@ -14,7 +14,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="home" color={color} />
+            <Ionicons size={28} name="barbell-sharp" color={color} />
           ),
         }}
       />
@@ -23,7 +23,7 @@ export default function TabLayout() {
         options={{
           title: "My Plan",
           tabBarIcon: ({ color }) => (
-            <FontAwesome size={28} name="cog" color={color} />
+            <Ionicons size={20} name="calendar-sharp" color={color} />
           ),
         }}
       />

@@ -6,16 +6,17 @@ import {
 } from "react-native-responsive-screen";
 import { bodyParts } from "@/constants";
 import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
+import { Router, useRouter } from "expo-router";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { ExerciseType } from "@/types";
 
 export default function BodyParts() {
   const router = useRouter();
   return (
     <View className="mx-4">
       <Text
-        style={{ fontSize: hp(3) }}
-        className="font-semibold text-neutral-700"
+        style={{ fontSize: hp(3.5) }}
+        className="font-semibold text-neutral-700 pb-2"
       >
         Exercises
       </Text>
@@ -25,7 +26,7 @@ export default function BodyParts() {
         numColumns={2}
         keyExtractor={(item) => item.name}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 50, paddingTop: 20 }}
+        contentContainerStyle={{ paddingBottom: 50 }}
         columnWrapperStyle={{ justifyContent: "space-between" }}
         renderItem={({ item, index }) => (
           <BodyPartCard router={router} index={index} item={item} />
@@ -35,7 +36,15 @@ export default function BodyParts() {
   );
 }
 
-const BodyPartCard = ({ item, router, index }) => {
+const BodyPartCard = ({
+  item,
+  router,
+  index,
+}: {
+  item: ExerciseType;
+  router: Router;
+  index: number;
+}) => {
   return (
     <Animated.View
       entering={FadeInDown.duration(400)
@@ -51,11 +60,11 @@ const BodyPartCard = ({ item, router, index }) => {
           source={item.image}
           resizeMode="cover"
           style={{ width: wp(44), height: wp(52) }}
-          className="rounded-[35px] absolute"
+          className="rounded-[10px] absolute"
         />
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,0.9)"]}
-          style={{ width: wp(44), height: hp(15), borderRadius: 35 }}
+          style={{ width: wp(44), height: hp(15), borderRadius: 10 }}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
           className="absolute bottom-0"
