@@ -10,12 +10,9 @@ import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
 import { Workout } from "@/types";
 import Schedule from "@/components/Schedule";
 import { StatusBar } from "expo-status-bar";
-import EditWorkoutModal from "@/components/EditWorkoutModal";
 import { useRouter } from "expo-router";
 
 export default function MyPlan() {
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [editWorkout, setEditWorkout] = useState({});
   const [value, setValue] = useState(new Date());
 
   const dispatch = useDispatch();
@@ -44,10 +41,6 @@ export default function MyPlan() {
           <View style={{ flexDirection: "row" }}>
             <DraggableList
               selectedDay={value.toDateString().split(" ")[0]} // To filter by selected day
-              data={workoutList}
-              editModalVisible={editModalVisible}
-              setEditModalVisible={setEditModalVisible}
-              setEditWorkout={setEditWorkout}
               onReordered={(updatedData: Workout[]) => {
                 dispatch(setWorkoutOrder(updatedData));
               }}
@@ -62,14 +55,6 @@ export default function MyPlan() {
           <Ionicons name="add" size={wp(5)} color="white" />
         </TouchableOpacity>
       </View>
-
-      {editModalVisible && (
-        <EditWorkoutModal
-          editModalVisible={editModalVisible}
-          setEditModalVisible={setEditModalVisible}
-          editWorkout={editWorkout}
-        />
-      )}
     </SafeAreaView>
   );
 }

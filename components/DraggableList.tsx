@@ -13,18 +13,11 @@ import { useRouter } from "expo-router";
 
 interface DraggableProps {
   selectedDay: string;
-  data: Workout[];
-  editModalVisible: boolean;
-  setEditModalVisible: (visible: boolean) => void;
-  setEditWorkout: (workout: Workout) => void;
   onReordered: (updatedData: Workout[]) => void;
 }
 
 export default function DraggableList({
   selectedDay,
-  editModalVisible,
-  setEditModalVisible,
-  setEditWorkout,
   onReordered,
 }: DraggableProps) {
   const dispatch = useDispatch<AppDispatch>();
@@ -34,10 +27,6 @@ export default function DraggableList({
   function keyExtractor(item: Workout) {
     return item.id;
   }
-  const toggleEditModal = (item: Workout) => {
-    setEditWorkout(item);
-    setEditModalVisible(!editModalVisible);
-  };
 
   // Only render workout with selected day
   const filteredWorkouts = workoutList.filter((item) =>
@@ -68,11 +57,12 @@ export default function DraggableList({
         </View>
 
         <View className="flex flex-row gap-4">
-          {/* Opens edit modal */}
           <TouchableOpacity
             style={{ height: hp(4), width: hp(4) }}
             className="bg-[#999] rounded-full items-center justify-center"
-            onPress={() => toggleEditModal(item)}
+            onPress={() =>
+              router.push({ pathname: "/editWorkout", params: item })
+            }
           >
             <Ionicons name="pencil" size={wp(4)} color="white" />
           </TouchableOpacity>
