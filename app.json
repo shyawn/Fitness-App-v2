@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "fitness-app-v2",
+    "name": "MyFitnessApp",
     "slug": "fitness-app-v2",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.shawncsj.fitnessappv2"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +37,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "5142fcd6-409b-4a83-8ed0-01656d3316ed"
+      }
+    },
+    "owner": "shawncsj"
   }
 }
