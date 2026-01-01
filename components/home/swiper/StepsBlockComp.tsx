@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   stepContainer: {
     padding: 15,
     borderRadius: 20,
-    backgroundColor: "#f0e9e9",
+    backgroundColor: "#f7f2f2",
   },
   stepsProgress: {
     marginTop: 20,

@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 12,
     borderRadius: 16,
-    backgroundColor: "#f0e9e9",
+    backgroundColor: "#f7f2f2",
   },
   waterAmtContainer: {
     marginVertical: 2,

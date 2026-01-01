@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   flameContainer: {
     padding: 15,
     borderRadius: 20,
-    backgroundColor: "#f0e9e9",
+    backgroundColor: "#f7f2f2",
   },
 });
 
