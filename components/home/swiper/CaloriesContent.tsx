@@ -29,7 +29,7 @@ const CaloriesContent = () => {
 
       <AnimatedCircularProgress
         size={100}
-        width={8}
+        width={7}
         fill={calcMacrosFulfilled(calories.goal, calories.tracked)}
         tintColor="#f7abab"
         onAnimationComplete={() => {}}
