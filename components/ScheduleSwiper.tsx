@@ -23,7 +23,8 @@ export default function ScheduleSwiper({
   setValue,
 }: {
   workout: boolean;
-  value: Date;
+  value: string;
+
   setValue: (date: Date) => void;
 }) {
   const swiper = useRef<Swiper | null>(null);
@@ -58,7 +59,7 @@ export default function ScheduleSwiper({
 
   const renderDay = useCallback(
     (item: DateItem, idx: number) => {
-      const isActive = value.toDateString() === item.date.toDateString();
+      const isActive = value === item.date.toISOString();
       const current = currentDate.toDateString() === item.date.toDateString();
       const isFutureDate = currentDate < item.date;
       return (
@@ -147,7 +148,7 @@ export default function ScheduleSwiper({
       {workout && (
         <View className="px-6 mb-3 flex flex-row items-center justify-between">
           <Text className="text-gray-500" style={styles.contentText}>
-            {value.toDateString()}
+            {new Date(value).toDateString()}
           </Text>
 
           <TouchableOpacity

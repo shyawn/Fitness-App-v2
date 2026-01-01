@@ -1,6 +1,5 @@
 import DraggableList from "@/components/DraggableList";
 import { RootState } from "@/store/store";
-import { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,15 +7,15 @@ import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
 import { Workout } from "@/types";
 import { StatusBar } from "expo-status-bar";
 import HomeNav from "@/components/HomeNav";
+import { setSchedule } from "@/store/schedule/scheduleSlice";
 
 export default function MyPlan() {
-  const [value, setValue] = useState(new Date());
-
-  const dispatch = useDispatch();
   const workoutList = useSelector((state: RootState) => state.workout);
+  const schedule = useSelector((state: RootState) => state.schedule);
+  const dispatch = useDispatch();
 
   const filteredWorkoutList = workoutList.filter((item) =>
-    item.day.includes(value.toDateString().split(" ")[0])
+    item.day.includes(schedule.split(" ")[0])
   );
 
   return (
@@ -27,7 +26,11 @@ export default function MyPlan() {
     >
       <StatusBar style="dark" />
       <View style={styles.container}>
-        <HomeNav title="My Plan" value={value} setValue={setValue} />
+        <HomeNav
+          title="My Plan"
+          value={schedule}
+          setValue={(date) => dispatch(setSchedule(date.toISOString()))}
+        />
 
         {filteredWorkoutList.length === 0 ? (
           <Text className="text-center font-semibold text-[16px] text-[#999] top-full">
@@ -36,7 +39,7 @@ export default function MyPlan() {
         ) : (
           <View style={{ flexDirection: "row" }}>
             <DraggableList
-              selectedDay={value.toDateString().split(" ")[0]} // To filter by selected day
+              selectedDay={schedule.split(" ")[0]} // To filter by selected day
               onReordered={(updatedData: Workout[]) => {
                 dispatch(setWorkoutOrder(updatedData));
               }}

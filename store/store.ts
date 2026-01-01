@@ -11,9 +11,11 @@ import {
   // REHYDRATE,
 } from "redux-persist";
 import workoutReducer from "./workoutPlan/workoutSlice";
+import scheduleReducer from "./schedule/scheduleSlice";
 
 const rootReducer = combineReducers({
   workout: workoutReducer,
+  schedule: scheduleReducer,
 });
 
 const persistConfig = {

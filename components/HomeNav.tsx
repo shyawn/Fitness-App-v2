@@ -5,7 +5,7 @@ import ScheduleSwiper from "./ScheduleSwiper";
 
 interface HomeNavProps {
   title: string;
-  value: Date;
+  value: string;
   setValue: (date: Date) => void;
 }
 
