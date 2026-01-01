@@ -45,9 +45,12 @@ export default function Schedule({
             <Text style={[styles.itemWeekday, isActive && styles.activeText]}>
               {item.weekday}
             </Text>
-            <Text style={[styles.itemDate, isActive && styles.activeText]}>
-              {item.date.getDate()}
-            </Text>
+            <View style={[styles.circle, isActive && styles.activeCircle]}>
+              <Text style={[styles.itemDate, isActive && styles.activeText]}>
+                {item.date.getDate() < 10 && "0"}
+                {item.date.getDate()}
+              </Text>
+            </View>
           </View>
         </TouchableWithoutFeedback>
       );
@@ -119,8 +122,8 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
-    height: 50,
-    marginHorizontal: 4,
+    height: 56,
+    marginHorizontal: 3,
     paddingVertical: 6,
     paddingHorizontal: 4,
     borderWidth: 1,
@@ -131,19 +134,35 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   itemWeekday: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 500,
     color: "#737373",
     marginBottom: 1,
   },
   itemDate: {
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: 600,
     color: "#111",
   },
+  circle: {
+    marginTop: 4,
+    borderWidth: 1,
+    width: 24,
+    height: 24,
+    borderRadius: 100,
+    borderColor: "#999",
+    borderStyle: "dotted",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  activeCircle: {
+    borderColor: "white",
+    borderStyle: "solid",
+  },
   activeItem: {
-    backgroundColor: "#111",
-    borderColor: "#111",
+    backgroundColor: "#404040",
+    borderColor: "#404040",
   },
   activeText: {
     color: "#fff",
