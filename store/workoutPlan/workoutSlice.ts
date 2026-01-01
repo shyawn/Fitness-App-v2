@@ -15,11 +15,9 @@ const workoutSlice = createSlice({
       return state.filter((item) => item.id !== action.payload.id);
     },
     storeEditWorkout: (state, action: PayloadAction<Workout>) => {
-      const targetWorkout = state.find((item) => item.id === action.payload.id);
-      if (targetWorkout !== null) {
-        Object.keys(targetWorkout).forEach(
-          (key) => (targetWorkout[key] = action.payload[key])
-        );
+      const index = state.findIndex((item) => item.id === action.payload.id);
+      if (index !== -1) {
+        state[index] = action.payload;
       }
     },
     setWorkoutOrder: (state, action: PayloadAction<Workout[]>) => {
