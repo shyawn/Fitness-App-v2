@@ -54,6 +54,7 @@ const MacroBlockComp = ({ macroType, tracked, goal }: MacroBlockCompProps) => {
 
 const styles = StyleSheet.create({
   macroContainer: {
+    width: "32%",
     backgroundColor: "white",
     padding: 20,
     borderRadius: 20,

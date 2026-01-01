@@ -5,7 +5,7 @@ import MacroContent from "./MacroContent";
 
 const MacroContainer = () => {
   return (
-    <TouchableWithoutFeedback className="" onPress={() => {}}>
+    <TouchableWithoutFeedback onPress={() => {}}>
       <View>
         <CaloriesContent />
 
