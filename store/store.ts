@@ -12,10 +12,12 @@ import {
 } from "redux-persist";
 import workoutReducer from "./workoutPlan/workoutSlice";
 import scheduleReducer from "./schedule/scheduleSlice";
+import macrosReducer from "./macros/macroSlice";
 
 const rootReducer = combineReducers({
   workout: workoutReducer,
   schedule: scheduleReducer,
+  macros: macrosReducer,
 });
 
 const persistConfig = {
