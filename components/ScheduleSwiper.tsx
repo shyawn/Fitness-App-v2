@@ -152,9 +152,10 @@ export default function ScheduleSwiper({
 
           <TouchableOpacity
             onPress={() => router.push({ pathname: "/editWorkout" })}
-            className="w-[30px] h-[30px] p-1 bg-[#A9A9A9] rounded-full items-center justify-center"
+            className="w-[30px] h-[30px] p-1 border border-1 rounded-full items-center justify-center"
+            style={styles.addWorkout}
           >
-            <Ionicons name="add" size={wp(5)} color="white" />
+            <Ionicons name="add" size={wp(5)} color="#6b7280" />
           </TouchableOpacity>
         </View>
       )}
@@ -228,5 +229,8 @@ const styles = StyleSheet.create({
   },
   activeText: {
     color: "#fff",
+  },
+  addWorkout: {
+    borderColor: "#6b7280",
   },
 });
