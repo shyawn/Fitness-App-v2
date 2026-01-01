@@ -9,6 +9,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Keyboard,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -73,6 +74,7 @@ const editWorkout = () => {
   } = useBottomSheet();
 
   const handleSelectDay = () => {
+    Keyboard.dismiss();
     expandSheet();
     setBottomSheetContent(
       <SelectWorkoutDayContent
