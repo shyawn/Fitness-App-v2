@@ -1,33 +1,53 @@
-import { View, Text, TouchableWithoutFeedback } from "react-native";
+import {
+  View,
+  Text,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+} from "react-native";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import moment from "moment";
 import Swiper from "react-native-swiper";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { useRouter } from "expo-router";
+import Ionicons from "@react-native-vector-icons/ionicons";
 
 interface DateItem {
   weekday: string;
   date: Date;
 }
 
-export default function Schedule({
+export default function ScheduleSwiper({
+  workout,
   value,
   setValue,
 }: {
+  workout: boolean;
   value: Date;
   setValue: (date: Date) => void;
 }) {
   const swiper = useRef<Swiper | null>(null);
-
+  const router = useRouter();
   const [week, setWeek] = useState(0);
 
-  const weeks = useMemo(() => {
-    const base = moment().add(week, "weeks").startOf("week"); // anchor = today
+  const currentDate = new Date();
 
-    return [-1, 0, 1].map((adj) => {
+  const weeks = useMemo(() => {
+    const today = moment().startOf("day");
+    const baseWeek = moment().add(week, "weeks").startOf("week"); // anchor = today
+    const baseWeekEnd = moment(baseWeek).endOf("week");
+
+    // allow previous and current weeks
+    const offsets: number[] = [-1, 0];
+
+    // allow next week only if displayed week is fully in the past
+    if (today.isAfter(baseWeekEnd, "day")) {
+      offsets.push(1);
+    }
+
+    return offsets.map((adj) => {
       return Array.from({ length: 7 }).map((_, index) => {
-        const date = moment(base).add(adj, "week").add(index, "day");
+        const date = moment(baseWeek).add(adj, "week").add(index, "day");
         return {
           weekday: date.format("ddd"),
           date: date.toDate(),
@@ -39,14 +59,43 @@ export default function Schedule({
   const renderDay = useCallback(
     (item: DateItem, idx: number) => {
       const isActive = value.toDateString() === item.date.toDateString();
+      const current = currentDate.toDateString() === item.date.toDateString();
+      const isFutureDate = currentDate < item.date;
       return (
-        <TouchableWithoutFeedback key={idx} onPress={() => setValue(item.date)}>
-          <View style={[styles.item, isActive && styles.activeItem]}>
-            <Text style={[styles.itemWeekday, isActive && styles.activeText]}>
+        <TouchableWithoutFeedback
+          key={idx}
+          disabled={isFutureDate}
+          onPress={() => setValue(item.date)}
+        >
+          <View
+            style={[
+              styles.item,
+              isActive && styles.activeItem,
+              current && !isActive && styles.currentItem,
+              isFutureDate && styles.futureItem,
+            ]}
+          >
+            <Text
+              style={[
+                styles.itemWeekday,
+                (isActive || (current && !isActive)) && styles.activeText,
+              ]}
+            >
               {item.weekday}
             </Text>
-            <View style={[styles.circle, isActive && styles.activeCircle]}>
-              <Text style={[styles.itemDate, isActive && styles.activeText]}>
+            <View
+              style={[
+                styles.circle,
+                current && styles.activeCircle,
+                isFutureDate && styles.futureCircle,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.itemDate,
+                  (isActive || (current && !isActive)) && styles.activeText,
+                ]}
+              >
                 {item.date.getDate() < 10 && "0"}
                 {item.date.getDate()}
               </Text>
@@ -59,14 +108,7 @@ export default function Schedule({
   );
 
   return (
-    <View>
-      <Text
-        style={{ fontSize: hp(4) }}
-        className="text-left font-semibold text-neutral-700 mb-3 pl-6"
-      >
-        My Schedule
-      </Text>
-
+    <>
       <View className="max-h-[74px]">
         <Swiper
           index={1}
@@ -80,6 +122,7 @@ export default function Schedule({
             setTimeout(() => {
               const newIndex = ind - 1;
               const newWeek = week + newIndex;
+
               setWeek(newWeek);
               setValue(moment(value).add(newIndex, "week").toDate());
               swiper.current?.scrollTo(1, false);
@@ -100,12 +143,22 @@ export default function Schedule({
           ))}
         </Swiper>
       </View>
-      <View className="pl-6">
-        <Text className="text-gray-500" style={styles.contentText}>
-          {value.toDateString()}
-        </Text>
-      </View>
-    </View>
+
+      {workout && (
+        <View className="px-6 mb-3 flex flex-row items-center justify-between">
+          <Text className="text-gray-500" style={styles.contentText}>
+            {value.toDateString()}
+          </Text>
+
+          <TouchableOpacity
+            onPress={() => router.push({ pathname: "/editWorkout" })}
+            className="w-[30px] h-[30px] p-1 bg-[#A9A9A9] rounded-full items-center justify-center"
+          >
+            <Ionicons name="add" size={wp(5)} color="white" />
+          </TouchableOpacity>
+        </View>
+      )}
+    </>
   );
 }
 
@@ -118,7 +171,6 @@ const styles = StyleSheet.create({
   contentText: {
     fontSize: 17,
     fontWeight: 600,
-    marginBottom: 12,
   },
   item: {
     flex: 1,
@@ -142,7 +194,7 @@ const styles = StyleSheet.create({
   itemDate: {
     fontSize: 12,
     fontWeight: 600,
-    color: "#111",
+    color: "#737373",
   },
   circle: {
     marginTop: 4,
@@ -160,9 +212,19 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderStyle: "solid",
   },
+  futureCircle: {
+    borderStyle: "solid",
+    borderColor: "#c1c1c1",
+  },
   activeItem: {
     backgroundColor: "#404040",
     borderColor: "#404040",
+  },
+  currentItem: {
+    backgroundColor: "#7a7979",
+  },
+  futureItem: {
+    backgroundColor: "#e3e3e3",
   },
   activeText: {
     color: "#fff",

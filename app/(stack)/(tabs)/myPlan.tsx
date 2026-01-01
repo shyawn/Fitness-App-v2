@@ -1,22 +1,18 @@
 import DraggableList from "@/components/DraggableList";
 import { RootState } from "@/store/store";
 import { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import Ionicons from "@react-native-vector-icons/ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
 import { Workout } from "@/types";
-import Schedule from "@/components/Schedule";
 import { StatusBar } from "expo-status-bar";
-import { useRouter } from "expo-router";
+import HomeNav from "@/components/HomeNav";
 
 export default function MyPlan() {
   const [value, setValue] = useState(new Date());
 
   const dispatch = useDispatch();
-  const router = useRouter();
   const workoutList = useSelector((state: RootState) => state.workout);
 
   const filteredWorkoutList = workoutList.filter((item) =>
@@ -31,7 +27,7 @@ export default function MyPlan() {
     >
       <StatusBar style="dark" />
       <View style={styles.container}>
-        <Schedule value={value} setValue={setValue} />
+        <HomeNav title="My Plan" value={value} setValue={setValue} />
 
         {filteredWorkoutList.length === 0 ? (
           <Text className="text-center font-semibold text-[16px] text-[#999] top-full">
@@ -47,13 +43,6 @@ export default function MyPlan() {
             />
           </View>
         )}
-
-        <TouchableOpacity
-          onPress={() => router.push({ pathname: "/editWorkout" })}
-          className="absolute p-1 right-7 top-32 bg-[#A9A9A9] rounded-full"
-        >
-          <Ionicons name="add" size={wp(5)} color="white" />
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -64,6 +53,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 8,
+    marginTop: 12,
   },
 });
