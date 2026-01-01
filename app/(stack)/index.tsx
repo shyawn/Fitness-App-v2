@@ -7,10 +7,18 @@ import {
 } from "react-native-responsive-screen";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeIn, FadeInDown, FadeOut } from "react-native-reanimated";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setSelectedDay } from "@/store/schedule/scheduleSlice";
 
 export default function Index() {
   const router = useRouter();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setSelectedDay(new Date().toISOString()));
+  }, []);
+
   return (
     <View className="flex-1 flex justify-end">
       <Image

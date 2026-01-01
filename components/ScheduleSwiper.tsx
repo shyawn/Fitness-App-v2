@@ -4,69 +4,65 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import { StyleSheet } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import moment from "moment";
 import Swiper from "react-native-swiper";
 import { useRouter } from "expo-router";
 import Ionicons from "@react-native-vector-icons/ionicons";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { setSelectedDay } from "@/store/schedule/scheduleSlice";
 
 interface DateItem {
   weekday: string;
   date: Date;
 }
 
-export default function ScheduleSwiper({
-  workout,
-  value,
-  setValue,
-}: {
-  workout: boolean;
-  value: string;
-
-  setValue: (date: Date) => void;
-}) {
+export default function ScheduleSwiper({ workout }: { workout: boolean }) {
   const swiper = useRef<Swiper | null>(null);
   const router = useRouter();
-  const [week, setWeek] = useState(0);
 
-  const currentDate = new Date();
+  const selectedDay = useSelector((state: RootState) => state.schedule);
+
+  // TODO: set week to be global
+
+  // const weekOffset = useSelector((state: RootState) => state.week);
+  const weekOffset = 0;
+  const dispatch = useDispatch();
+
+  const today = moment().startOf("day");
 
   const weeks = useMemo(() => {
-    const today = moment().startOf("day");
-    const baseWeek = moment().add(week, "weeks").startOf("week"); // anchor = today
+    const baseWeek = moment().add(weekOffset, "weeks").startOf("week");
     const baseWeekEnd = moment(baseWeek).endOf("week");
 
-    // allow previous and current weeks
-    const offsets: number[] = [-1, 0];
+    // previous week always allowed
+    const offsets = [-1, 0];
 
-    // allow next week only if displayed week is fully in the past
-    if (today.isAfter(baseWeekEnd, "day")) {
-      offsets.push(1);
-    }
+    // next week only if baseWeek fully in past
+    if (today.isAfter(baseWeekEnd)) offsets.push(1);
 
-    return offsets.map((adj) => {
-      return Array.from({ length: 7 }).map((_, index) => {
-        const date = moment(baseWeek).add(adj, "week").add(index, "day");
-        return {
-          weekday: date.format("ddd"),
-          date: date.toDate(),
-        };
-      });
-    });
-  }, [week]);
+    return offsets.map((adj) =>
+      Array.from({ length: 7 }).map((_, i) => ({
+        weekday: moment(baseWeek).add(adj, "week").add(i, "day").format("ddd"),
+        date: moment(baseWeek).add(adj, "week").add(i, "day").toDate(),
+      }))
+    );
+  }, [weekOffset, today]);
 
   const renderDay = useCallback(
     (item: DateItem, idx: number) => {
-      const isActive = value === item.date.toISOString();
-      const current = currentDate.toDateString() === item.date.toDateString();
-      const isFutureDate = currentDate < item.date;
+      const isActive = moment(item.date).isSame(moment(selectedDay), "day");
+      const current = today.toISOString() === item.date.toDateString();
+      const isFutureDate = moment(item.date).isAfter(today, "day");
+
       return (
         <TouchableWithoutFeedback
           key={idx}
           disabled={isFutureDate}
-          onPress={() => setValue(item.date)}
+          onPress={() => dispatch(setSelectedDay(item.date.toISOString()))}
         >
           <View
             style={[
@@ -105,8 +101,17 @@ export default function ScheduleSwiper({
         </TouchableWithoutFeedback>
       );
     },
-    [value]
+    [selectedDay, today]
   );
+
+  // TODO: allow > 1 past weeks to be viewed
+  const handleIndexChange = (index: number) => {
+    // if (index === 1) return;
+    // const delta = index - 1;
+    // const nextWeek = weekOffset + delta;
+    // dispatch(setWeek(nextWeek));
+    // setTimeout(() => swiper.current?.scrollTo(1, false), 50);
+  };
 
   return (
     <>
@@ -116,19 +121,7 @@ export default function ScheduleSwiper({
           ref={swiper}
           showsPagination={false}
           loop={false}
-          onIndexChanged={(ind) => {
-            if (ind === 1) {
-              return;
-            }
-            setTimeout(() => {
-              const newIndex = ind - 1;
-              const newWeek = week + newIndex;
-
-              setWeek(newWeek);
-              setValue(moment(value).add(newIndex, "week").toDate());
-              swiper.current?.scrollTo(1, false);
-            }, 100);
-          }}
+          onIndexChanged={handleIndexChange}
         >
           {weeks.map((dates, index) => (
             <View
@@ -148,7 +141,7 @@ export default function ScheduleSwiper({
       {workout && (
         <View className="px-6 mb-3 flex flex-row items-center justify-between">
           <Text className="text-gray-500" style={styles.contentText}>
-            {new Date(value).toDateString()}
+            {new Date(selectedDay).toDateString()}
           </Text>
 
           <TouchableOpacity

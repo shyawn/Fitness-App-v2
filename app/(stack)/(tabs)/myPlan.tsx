@@ -7,15 +7,14 @@ import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
 import { Workout } from "@/types";
 import { StatusBar } from "expo-status-bar";
 import HomeNav from "@/components/HomeNav";
-import { setSchedule } from "@/store/schedule/scheduleSlice";
 
 export default function MyPlan() {
   const workoutList = useSelector((state: RootState) => state.workout);
-  const schedule = useSelector((state: RootState) => state.schedule);
+  const selectedDay = useSelector((state: RootState) => state.schedule);
   const dispatch = useDispatch();
 
   const filteredWorkoutList = workoutList.filter((item) =>
-    item.day.includes(schedule.split(" ")[0])
+    item.day.includes(selectedDay.split(" ")[0])
   );
 
   return (
@@ -26,11 +25,7 @@ export default function MyPlan() {
     >
       <StatusBar style="dark" />
       <View style={styles.container}>
-        <HomeNav
-          title="My Plan"
-          value={schedule}
-          setValue={(date) => dispatch(setSchedule(date.toISOString()))}
-        />
+        <HomeNav title="My Plan" />
 
         {filteredWorkoutList.length === 0 ? (
           <Text className="text-center font-semibold text-[16px] text-[#999] top-full">
@@ -39,7 +34,7 @@ export default function MyPlan() {
         ) : (
           <View style={{ flexDirection: "row" }}>
             <DraggableList
-              selectedDay={schedule.split(" ")[0]} // To filter by selected day
+              selectedDay={selectedDay.split(" ")[0]} // To filter by selected day
               onReordered={(updatedData: Workout[]) => {
                 dispatch(setWorkoutOrder(updatedData));
               }}
@@ -56,6 +51,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 12,
   },
 });
