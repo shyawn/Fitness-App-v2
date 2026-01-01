@@ -8,6 +8,7 @@ import Carousel, {
 } from "react-native-reanimated-carousel";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import MacroContainer from "./MacroContainer";
+import StepsContainer from "./StepsContainer";
 
 const HomeSwiper = () => {
   const ref = React.useRef<ICarouselInstance>(null);
@@ -21,7 +22,7 @@ const HomeSwiper = () => {
 
   const data = [
     { id: 1, Component: MacroContainer },
-    { id: 2, Component: MacroContainer },
+    { id: 2, Component: StepsContainer },
   ];
 
   const renderItem = ({ item }: any) => {
