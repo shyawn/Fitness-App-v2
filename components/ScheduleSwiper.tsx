@@ -55,7 +55,7 @@ export default function ScheduleSwiper({ workout }: { workout: boolean }) {
   const renderDay = useCallback(
     (item: DateItem, idx: number) => {
       const isActive = moment(item.date).isSame(moment(selectedDay), "day");
-      const current = today.toISOString() === item.date.toDateString();
+      const current = moment(item.date).isSame(today, "day");
       const isFutureDate = moment(item.date).isAfter(today, "day");
 
       return (
