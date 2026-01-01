@@ -20,7 +20,7 @@ function AnimatedCarousel() {
         autoPlay={true}
         autoPlayInterval={3000}
         data={sliderImages}
-        height={210}
+        height={240}
         loop={true}
         pagingEnabled={true}
         snapEnabled={true}
