@@ -7,14 +7,16 @@ import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
 import { Workout } from "@/types";
 import { StatusBar } from "expo-status-bar";
 import HomeNav from "@/components/HomeNav";
+import moment from "moment";
 
 export default function MyPlan() {
   const workoutList = useSelector((state: RootState) => state.workout);
   const selectedDay = useSelector((state: RootState) => state.schedule);
+  const day = moment(selectedDay).toString().split(" ")[0];
   const dispatch = useDispatch();
 
   const filteredWorkoutList = workoutList.filter((item) =>
-    item.day.includes(selectedDay.split(" ")[0])
+    item.day.includes(day)
   );
 
   return (
@@ -34,7 +36,7 @@ export default function MyPlan() {
         ) : (
           <View style={{ flexDirection: "row" }}>
             <DraggableList
-              selectedDay={selectedDay.split(" ")[0]} // To filter by selected day
+              selectedDay={day} // To filter by selected day
               onReordered={(updatedData: Workout[]) => {
                 dispatch(setWorkoutOrder(updatedData));
               }}
