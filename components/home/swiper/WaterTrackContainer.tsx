@@ -1,8 +1,15 @@
+import { useBottomSheet } from "@/components/common/BottomSheetComp";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import SelectWaterContent from "./SelectWaterContent";
 
 const WaterTrackContainer = () => {
+  const { expandSheet, closeSheet } = useBottomSheet();
+  const handleSelectWater = () => {
+    expandSheet(<SelectWaterContent onClose={closeSheet} />);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -16,7 +23,7 @@ const WaterTrackContainer = () => {
           <View style={[styles.innerContainer, styles.waterAmtInnerContainer]}>
             <Text style={[styles.text, styles.waterAmtText]}>0 ml</Text>
 
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={handleSelectWater}>
               <Ionicons name="settings-outline" color="#999" size={16} />
             </TouchableOpacity>
           </View>
