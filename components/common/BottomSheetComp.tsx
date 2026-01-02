@@ -14,6 +14,7 @@ import BottomSheet, {
 interface BottomSheetContextType {
   expandSheet: (content: React.ReactNode) => void;
   closeSheet: () => void;
+  setContentPanning?: (value: boolean) => void;
 }
 
 const BottomSheetContext = createContext<BottomSheetContextType | undefined>(
@@ -25,6 +26,7 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const [content, setContent] = useState<React.ReactNode>(null);
+  const [contentPanning, setContentPanning] = useState(true);
 
   const expandSheet = useCallback((newContent: React.ReactNode) => {
     setContent(newContent);
@@ -35,8 +37,17 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({
     bottomSheetRef.current?.close();
   }, []);
 
+  const handleSheetChange = useCallback((index: number) => {
+    if (index === -1) {
+      setContentPanning(true);
+      setContent(null);
+    }
+  }, []);
+
   return (
-    <BottomSheetContext.Provider value={{ expandSheet, closeSheet }}>
+    <BottomSheetContext.Provider
+      value={{ expandSheet, closeSheet, setContentPanning }}
+    >
       {children}
 
       <BottomSheet
@@ -44,6 +55,9 @@ export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({
         index={-1}
         detached
         enablePanDownToClose
+        enableContentPanningGesture={contentPanning}
+        enableHandlePanningGesture={true}
+        onChange={handleSheetChange}
         backdropComponent={(props) => (
           <BottomSheetBackdrop
             {...props}

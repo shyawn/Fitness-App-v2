@@ -9,3 +9,20 @@ export const calcMacrosLeft = (goal: number, tracked: number) => {
 export const calcHydrationCup = (servingAmt: number) => {
   return Math.floor(servingAmt / 250);
 };
+
+export const hydrationServingRange = () => {
+  const values = [];
+
+  for (let i = 250; i <= 2000; i += 50) {
+    values.push(i);
+  }
+
+  for (let i = 2500; i <= 4000; i += 500) {
+    values.push(i);
+  }
+
+  return values.map((val) => ({
+    value: val,
+    // label: `${val} ml`,
+  }));
+};
