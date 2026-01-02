@@ -1,54 +1,64 @@
-import React, { useEffect, useRef } from "react";
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
+import { StyleSheet } from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
-import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import { StyleSheet } from "react-native";
 
-interface BottomSheetCompProps {
-  setRef: (ref: BottomSheetMethods | null) => void;
-  renderContent: React.ReactNode;
-  onDismiss?: () => void;
+interface BottomSheetContextType {
+  expandSheet: (content: React.ReactNode) => void;
+  closeSheet: () => void;
 }
 
-const BottomSheetComp = ({
-  setRef,
-  renderContent,
-  onDismiss,
-}: BottomSheetCompProps) => {
-  const localRef = useRef<BottomSheet>(null);
+const BottomSheetContext = createContext<BottomSheetContextType | undefined>(
+  undefined
+);
 
-  useEffect(() => {
-    setRef(localRef.current);
-  }, [setRef]);
+export const BottomSheetProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const [content, setContent] = useState<React.ReactNode>(null);
 
-  const handleSheetChange = (index: number) => {
-    if (index === -1 && onDismiss) {
-      onDismiss();
-    }
-  };
+  const expandSheet = useCallback((newContent: React.ReactNode) => {
+    setContent(newContent);
+    bottomSheetRef.current?.expand();
+  }, []);
+
+  const closeSheet = useCallback(() => {
+    bottomSheetRef.current?.close();
+  }, []);
+
   return (
-    <BottomSheet
-      ref={localRef}
-      index={-1}
-      detached
-      enablePanDownToClose
-      onChange={handleSheetChange}
-      backdropComponent={(props) => (
-        <BottomSheetBackdrop
-          {...props}
-          disappearsOnIndex={-1}
-          appearsOnIndex={0}
-          pressBehavior="close"
-        />
-      )}
-      style={styles.bottomSheetContainer}
-    >
-      <BottomSheetView style={styles.sheetContainer}>
-        {renderContent}
-      </BottomSheetView>
-    </BottomSheet>
+    <BottomSheetContext.Provider value={{ expandSheet, closeSheet }}>
+      {children}
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        detached
+        enablePanDownToClose
+        backdropComponent={(props) => (
+          <BottomSheetBackdrop
+            {...props}
+            disappearsOnIndex={-1}
+            appearsOnIndex={0}
+            pressBehavior="close"
+          />
+        )}
+        style={styles.bottomSheetContainer}
+      >
+        <BottomSheetView style={styles.sheetContainer}>
+          {content}
+        </BottomSheetView>
+      </BottomSheet>
+    </BottomSheetContext.Provider>
   );
 };
 
@@ -67,4 +77,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BottomSheetComp;
+// custom hook to use the context
+export const useBottomSheet = () => {
+  const context = useContext(BottomSheetContext);
+  if (!context)
+    throw new Error(
+      "useGlobalBottomSheet must be used within BottomSheetProvider"
+    );
+  return context;
+};

@@ -5,6 +5,7 @@ import { persistor } from "../store/store";
 import { ActivityIndicator, View } from "react-native";
 import { Slot } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { BottomSheetProvider } from "@/components/common/BottomSheetComp";
 
 export default function RootLayout() {
   const renderLoading = () => {
@@ -17,9 +18,11 @@ export default function RootLayout() {
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <PersistGate persistor={persistor} loading={renderLoading()}>
-          <Slot />
-        </PersistGate>
+        <BottomSheetProvider>
+          <PersistGate persistor={persistor} loading={renderLoading()}>
+            <Slot />
+          </PersistGate>
+        </BottomSheetProvider>
       </GestureHandlerRootView>
     </Provider>
   );

@@ -21,9 +21,8 @@ import { useDispatch } from "react-redux";
 import { addWorkout, storeEditWorkout } from "@/store/workoutPlan/workoutSlice";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheetComp from "@/components/common/BottomSheetComp";
-import { useBottomSheet } from "@/hooks/useBottomSheet";
 import SelectWorkoutDayContent from "@/components/editWorkout/SelectWorkoutDayContent";
+import { useBottomSheet } from "@/components/common/BottomSheetComp";
 
 const emptyWorkout: Workout = {
   id: "",
@@ -64,19 +63,11 @@ const editWorkout = () => {
 
   const router = useRouter();
   const insets = useSafeAreaInsets();
-
-  const {
-    bottomSheetRef,
-    bottomSheetContent,
-    setBottomSheetContent,
-    expandSheet,
-    closeSheet,
-  } = useBottomSheet();
+  const { expandSheet, closeSheet } = useBottomSheet();
 
   const handleSelectDay = () => {
     Keyboard.dismiss();
-    expandSheet();
-    setBottomSheetContent(
+    expandSheet(
       <SelectWorkoutDayContent
         setWorkout={(text) => setWorkout((prev) => ({ ...prev, day: text }))}
         onClose={closeSheet}
@@ -172,11 +163,6 @@ const editWorkout = () => {
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-
-      <BottomSheetComp
-        setRef={(ref) => (bottomSheetRef.current = ref)}
-        renderContent={bottomSheetContent}
-      />
     </GestureHandlerRootView>
   );
 };
