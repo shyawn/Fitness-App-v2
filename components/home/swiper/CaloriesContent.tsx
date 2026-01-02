@@ -31,7 +31,7 @@ const CaloriesContent = () => {
         size={100}
         width={7}
         fill={calcMacrosFulfilled(calories.goal, calories.tracked)}
-        tintColor="#f7abab"
+        tintColor="#404040"
         onAnimationComplete={() => {}}
         backgroundColor="#e3e3e3"
       >
