@@ -83,7 +83,7 @@ const StepsBlockComp = () => {
           </View>
         </View>
 
-        <View className="flex flex-row gap-3">
+        <View className="flex flex-row gap-3 items-center">
           <View className="w-[28px] h-[28px] rounded-full flex items-center justify-center bg-[#404040]">
             <Ionicons name="footsteps-outline" color="white" size={16} />
           </View>
