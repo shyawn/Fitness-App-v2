@@ -1,18 +1,16 @@
 import { week } from "@/constants";
-import { Workout } from "@/types";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import BaseButton from "../common/BaseButton";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import CloseIcon from "../common/CloseIcon";
 
 interface SelectWorkoutDayContentProps {
-  workout: Workout;
   setWorkout: (selectedDay: string) => void;
   onClose: () => void;
 }
 
 const SelectWorkoutDayContent = ({
-  workout,
   setWorkout,
   onClose,
 }: SelectWorkoutDayContentProps) => {
@@ -24,9 +22,11 @@ const SelectWorkoutDayContent = ({
 
   return (
     <View>
+      <CloseIcon style={styles.closeContainer} onPress={onClose} />
+
       <Text
         style={{ fontSize: hp(3.5) }}
-        className="mb-3 font-semibold text-[#1d1d1d]"
+        className="text-center mb-3 font-semibold text-[#404040]"
       >
         Select Workout Day
       </Text>
@@ -60,6 +60,11 @@ const SelectWorkoutDayContent = ({
 };
 
 const styles = StyleSheet.create({
+  closeContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+  },
   active: {
     backgroundColor: "#1d1d1d",
   },

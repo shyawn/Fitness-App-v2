@@ -78,7 +78,6 @@ const editWorkout = () => {
     expandSheet();
     setBottomSheetContent(
       <SelectWorkoutDayContent
-        workout={workout}
         setWorkout={(text) => setWorkout((prev) => ({ ...prev, day: text }))}
         onClose={closeSheet}
       />
