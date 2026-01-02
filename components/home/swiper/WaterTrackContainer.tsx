@@ -24,8 +24,8 @@ const WaterTrackContainer = () => {
       </View>
 
       <View style={styles.optionContainer}>
-        <TouchableOpacity onPress={() => {}}>
-          <Ionicons name="remove-circle-outline" color="#404040" size={32} />
+        <TouchableOpacity style={styles.minus} onPress={() => {}}>
+          <Ionicons name="remove-outline" size={20} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {}}>
@@ -79,8 +79,19 @@ const styles = StyleSheet.create({
   },
   optionContainer: {
     flexDirection: "row",
+    alignItems: "center",
     gap: 8,
     marginRight: 10,
+  },
+  minus: {
+    width: 26,
+    height: 26,
+    borderRadius: 100,
+    borderWidth: 1,
+    borderColor: "#404040",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
