@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import BaseButton from "../common/BaseButton";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import CloseIcon from "../common/CloseIcon";
+import { Typography } from "@/constants/typography";
 
 interface SelectWorkoutDayContentProps {
   setWorkout: (selectedDay: string) => void;
@@ -37,10 +38,10 @@ const SelectWorkoutDayContent = ({
           key={idx}
           onPress={() => setSelectedDay(day)}
         >
-          <Text className="text-[16px]">{day}</Text>
+          <Text style={Typography.largeBody}>{day}</Text>
 
           <View
-            className="rounded-full h-[22px] w-[22px] border border-1 border-[#1d1d1d] flex items-center justify-center"
+            className="rounded-full h-[22px] w-[22px] border border-1 border-[#404040] flex items-center justify-center"
             style={day === selectedDay && styles.active}
           >
             <View style={styles.innerCircle} />
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
     left: 0,
   },
   active: {
-    backgroundColor: "#1d1d1d",
+    backgroundColor: "#404040",
   },
   innerCircle: {
     width: 8,

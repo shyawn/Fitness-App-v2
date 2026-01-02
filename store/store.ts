@@ -13,11 +13,13 @@ import {
 import workoutReducer from "./workoutPlan/workoutSlice";
 import scheduleReducer from "./schedule/scheduleSlice";
 import macrosReducer from "./macros/macroSlice";
+import hydrationReducer from "./hydration/hydrationSlice";
 
 const rootReducer = combineReducers({
   workout: workoutReducer,
   schedule: scheduleReducer,
   macros: macrosReducer,
+  hydration: hydrationReducer,
 });
 
 const persistConfig = {

@@ -3,12 +3,17 @@ import Ionicons from "@react-native-vector-icons/ionicons";
 import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import SelectWaterContent from "./SelectWaterContent";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 const WaterTrackContainer = () => {
   const { expandSheet, closeSheet } = useBottomSheet();
   const handleSelectWater = () => {
     expandSheet(<SelectWaterContent onClose={closeSheet} />);
   };
+  const { hydrationTracked } = useSelector(
+    (state: RootState) => state.hydration
+  );
 
   return (
     <View style={styles.container}>
@@ -21,7 +26,9 @@ const WaterTrackContainer = () => {
           <Text style={styles.text}>Water</Text>
 
           <View style={[styles.innerContainer, styles.waterAmtInnerContainer]}>
-            <Text style={[styles.text, styles.waterAmtText]}>0 ml</Text>
+            <Text style={[styles.text, styles.waterAmtText]}>
+              {hydrationTracked} ml
+            </Text>
 
             <TouchableOpacity onPress={handleSelectWater}>
               <Ionicons name="settings-outline" color="#999" size={16} />

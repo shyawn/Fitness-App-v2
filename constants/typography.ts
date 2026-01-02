@@ -9,6 +9,10 @@ export const Typography = {
     fontSize: 18,
     color: "#404040",
   },
+  largeBody: {
+    fontSize: 16,
+    color: "#404040",
+  },
   body: {
     fontSize: 14,
     color: "#404040",
