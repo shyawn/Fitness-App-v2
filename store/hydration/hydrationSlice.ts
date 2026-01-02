@@ -15,7 +15,10 @@ const hydrationSlice = createSlice({
   initialState,
   reducers: {
     updateHydrationTracked: (state, action: PayloadAction<number>) => {
-      state.hydrationTracked = action.payload;
+      state.hydrationTracked = Math.max(
+        0,
+        state.hydrationTracked + action.payload
+      ); // prevent negative hydration
     },
     updateServingAmt: (state, action: PayloadAction<number>) => {
       state.servingAmt = action.payload;

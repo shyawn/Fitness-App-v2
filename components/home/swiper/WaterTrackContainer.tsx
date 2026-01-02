@@ -3,17 +3,27 @@ import Ionicons from "@react-native-vector-icons/ionicons";
 import React from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import SelectWaterContent from "./SelectWaterContent";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { updateHydrationTracked } from "@/store/hydration/hydrationSlice";
 
 const WaterTrackContainer = () => {
-  const { expandSheet, closeSheet } = useBottomSheet();
+  const { expandSheet, closeSheet, setContentPanning } = useBottomSheet();
   const handleSelectWater = () => {
-    expandSheet(<SelectWaterContent onClose={closeSheet} />);
+    expandSheet(
+      <SelectWaterContent onClose={closeSheet} setPanning={setContentPanning} />
+    );
   };
-  const { hydrationTracked } = useSelector(
+  const { hydrationTracked, servingAmt } = useSelector(
     (state: RootState) => state.hydration
   );
+
+  const dispatch = useDispatch();
+
+  const handlePress = (isAddition: boolean) => {
+    const amount = isAddition ? servingAmt : -servingAmt;
+    dispatch(updateHydrationTracked(amount));
+  };
 
   return (
     <View style={styles.container}>
@@ -38,11 +48,14 @@ const WaterTrackContainer = () => {
       </View>
 
       <View style={styles.optionContainer}>
-        <TouchableOpacity style={styles.minus} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.minus}
+          onPress={() => handlePress(false)}
+        >
           <Ionicons name="remove-outline" size={20} />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => handlePress(true)}>
           <Ionicons name="add-circle" color="#404040" size={32} />
         </TouchableOpacity>
       </View>
