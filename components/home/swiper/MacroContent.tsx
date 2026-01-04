@@ -5,7 +5,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { MacroState } from "@/store/macros/macroSlice";
 
-const MacroContent = () => {
+interface MacroContentProps {
+  showMacroFraction: boolean;
+}
+
+const MacroContent = ({ showMacroFraction }: MacroContentProps) => {
   const macros: (keyof MacroState)[] = ["protein", "carbs", "fats"];
 
   const macroState = useSelector((state: RootState) => state.macros);
@@ -18,6 +22,7 @@ const MacroContent = () => {
           macroType={macro}
           tracked={macroState[macro].tracked}
           goal={macroState[macro].goal}
+          showMacroFraction={showMacroFraction}
         />
       ))}
     </View>

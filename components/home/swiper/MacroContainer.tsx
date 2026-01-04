@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { TouchableWithoutFeedback, View } from "react-native";
 import CaloriesContent from "./CaloriesContent";
 import MacroContent from "./MacroContent";
 
 const MacroContainer = () => {
-  return (
-    <TouchableWithoutFeedback onPress={() => {}}>
-      <View>
-        <CaloriesContent />
+  const [showMacroFraction, setShowMacroFraction] = useState(false);
 
-        <MacroContent />
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => setShowMacroFraction((prev) => !prev)}
+    >
+      <View>
+        <CaloriesContent showMacroFraction={showMacroFraction} />
+
+        <MacroContent showMacroFraction={showMacroFraction} />
       </View>
     </TouchableWithoutFeedback>
   );
