@@ -8,7 +8,6 @@ import { Workout } from "@/types";
 import { StatusBar } from "expo-status-bar";
 import HomeNav from "@/components/HomeNav";
 import moment from "moment";
-import Ionicons from "@react-native-vector-icons/ionicons";
 
 export default function MyPlan() {
   const workoutList = useSelector((state: RootState) => state.workout);
@@ -28,16 +27,12 @@ export default function MyPlan() {
     >
       <StatusBar style="dark" />
       <View style={styles.container}>
-        <HomeNav title="My Workouts" />
+        <HomeNav title="My Plan" />
 
         {filteredWorkoutList.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Ionicons name="barbell-sharp" color="#999" size={38} />
-            <Text className="text-center font-semibold text-[16px] leading-8 text-[#999] top-5">
-              {`No workouts for today.
-Remember to get sufficient rest!`}
-            </Text>
-          </View>
+          <Text className="text-center font-semibold text-[16px] text-[#999] top-full">
+            {`No workouts for today.\n\nRemember to get sufficient rest!`}
+          </Text>
         ) : (
           <View style={{ flexDirection: "row" }}>
             <DraggableList
@@ -56,11 +51,6 @@ Remember to get sufficient rest!`}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  emptyContainer: {
-    top: "80%",
     justifyContent: "center",
     alignItems: "center",
   },
