@@ -1,5 +1,6 @@
 import { dummyExercises } from "@/constants";
 import { Workout } from "@/types";
+import Ionicons from "@react-native-vector-icons/ionicons";
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -55,18 +56,26 @@ const SearchWorkout = ({
         Name
       </Text>
 
-      <TextInput
-        className="w-full p-3 rounded-lg border-[1px] border-[#D7D7D7] bg-white capitalize"
-        style={error && workout.name === "" && { borderColor: "red" }}
-        placeholder="Search workout"
-        placeholderTextColor="#999"
-        value={workout.name}
-        onChangeText={(text) => {
-          setSearchText(text);
-          setWorkout({ ...workout, name: text });
-          setShowDropdown(true);
-        }}
-      />
+      <View className="w-full flex flex-row items-center gap-2 px-3 rounded-lg border-[1px] border-[#D7D7D7] bg-white">
+        <Ionicons
+          style={styles.searchIcon}
+          name="search"
+          color="#999"
+          size={20}
+        />
+        <TextInput
+          className="pl-8 flex flex-1 capitalize"
+          style={error && workout.name === "" && { borderColor: "red" }}
+          placeholder="Search workout"
+          placeholderTextColor="#999"
+          value={workout.name}
+          onChangeText={(text) => {
+            setSearchText(text);
+            setWorkout({ ...workout, name: text });
+            setShowDropdown(true);
+          }}
+        />
+      </View>
 
       {showDropdown && (
         <FlatList
@@ -101,6 +110,10 @@ const SearchWorkout = ({
 };
 
 const styles = StyleSheet.create({
+  searchIcon: {
+    position: "absolute",
+    left: 12,
+  },
   listItem: {
     padding: 10,
     borderWidth: 1,
