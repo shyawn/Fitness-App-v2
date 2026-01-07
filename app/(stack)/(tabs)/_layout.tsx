@@ -21,7 +21,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="myPlan"
         options={{
-          title: "My Plan",
+          title: "My Workouts",
           tabBarIcon: ({ color }) => (
             <Ionicons size={20} name="calendar-outline" color={color} />
           ),
@@ -30,7 +30,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="workouts"
         options={{
-          title: "Workouts",
+          title: "Exercises",
           tabBarIcon: ({ color }) => (
             <Ionicons size={24} name="barbell-outline" color={color} />
           ),
