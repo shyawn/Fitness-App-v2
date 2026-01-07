@@ -11,6 +11,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import SelectWorkoutType from "./SelectWorkoutType";
 
 interface SearchWorkoutProps {
   workout: Workout;
@@ -56,7 +57,10 @@ const SearchWorkout = ({
         Name
       </Text>
 
-      <View className="w-full flex flex-row items-center gap-2 px-3 rounded-lg border-[1px] border-[#D7D7D7] bg-white">
+      <View
+        className="w-full flex flex-row items-center gap-2 px-3 rounded-lg border-[1px] border-[#D7D7D7] bg-white"
+        style={error && workout.name === "" && { borderColor: "red" }}
+      >
         <Ionicons
           style={styles.searchIcon}
           name="search"
@@ -64,8 +68,7 @@ const SearchWorkout = ({
           size={20}
         />
         <TextInput
-          className="pl-8 flex flex-1 capitalize"
-          style={error && workout.name === "" && { borderColor: "red" }}
+          style={styles.searchInput}
           placeholder="Search exercises.."
           placeholderTextColor="#999"
           value={workout.name}
@@ -105,6 +108,12 @@ const SearchWorkout = ({
           {workout.day ? workout.day : "Select Workout Day"}
         </Text>
       </TouchableOpacity>
+
+      <SelectWorkoutType
+        workout={workout}
+        error={error !== "" && workout.type === ""}
+        setWorkout={setWorkout}
+      />
     </View>
   );
 };
@@ -113,6 +122,11 @@ const styles = StyleSheet.create({
   searchIcon: {
     position: "absolute",
     left: 12,
+  },
+  searchInput: {
+    paddingLeft: 32,
+    flex: 1,
+    textTransform: "capitalize",
   },
   listItem: {
     padding: 10,

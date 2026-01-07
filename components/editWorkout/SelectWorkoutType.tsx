@@ -25,7 +25,7 @@ const SelectWorkoutType = ({
 
   return (
     <View
-      className="bg-[#D7D7D7] rounded-xl p-1 flex flex-row gap-2"
+      className="bg-[#D7D7D7] rounded-xl p-1 mt-6 flex flex-row gap-2"
       style={error && { borderWidth: 1, borderColor: "red" }}
     >
       {workoutTypes.map((type, idx) => (
