@@ -66,7 +66,7 @@ const SearchWorkout = ({
         <TextInput
           className="pl-8 flex flex-1 capitalize"
           style={error && workout.name === "" && { borderColor: "red" }}
-          placeholder="Search workout"
+          placeholder="Search exercises.."
           placeholderTextColor="#999"
           value={workout.name}
           onChangeText={(text) => {
