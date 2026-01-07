@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { deleteWorkout } from "@/store/workoutPlan/workoutSlice";
 import { useRouter } from "expo-router";
+import * as Haptics from "expo-haptics";
 
 interface DraggableProps {
   selectedDay: string;
@@ -41,7 +42,10 @@ export default function DraggableList({
     return (
       <TouchableOpacity
         key={item.id}
-        onPressIn={onDragStart}
+        onLongPress={() => {
+          onDragStart();
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+        }}
         onPressOut={onDragEnd}
         className="w-full my-1 p-3 border-[1px] bg-white border-[#A9A9A9] rounded-lg flex flex-row justify-between items-center"
       >
