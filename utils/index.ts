@@ -1,3 +1,5 @@
+import { WorkoutType } from "@/types";
+
 export const calcMacrosFulfilled = (goal: number, tracked: number) => {
   return (tracked / goal) * 100;
 };
@@ -25,4 +27,13 @@ export const hydrationServingRange = () => {
     value: val,
     // label: `${val} ml`,
   }));
+};
+
+export const getParamValue = (param: string | string[] | undefined): string => {
+  if (!param) return "";
+  return Array.isArray(param) ? param[0] : param;
+};
+
+export const isEmptyWorkoutInput = (value: string) => {
+  return value === "" || Number(value) === 0;
 };

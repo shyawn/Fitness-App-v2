@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { Workout, WorkoutType } from "@/types";
+import { Workout, WorkoutSetType, WorkoutType } from "@/types";
 import SearchWorkout from "@/components/editWorkout/SearchWorkout";
 import WorkoutSet from "@/components/editWorkout/WorkoutSet";
 import BaseButton from "@/components/common/BaseButton";
@@ -23,15 +23,14 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SelectWorkoutDayContent from "@/components/editWorkout/SelectWorkoutDayContent";
 import { useBottomSheet } from "@/components/common/BottomSheetComp";
+import { getParamValue, isEmptyWorkoutInput } from "@/utils";
 
 const emptyWorkout: Workout = {
   id: "",
   name: "",
   day: "",
   type: "",
-  sets: "",
-  reps: "",
-  weight: "",
+  sets: [],
   remarks: "",
 };
 
@@ -44,19 +43,16 @@ const editWorkout = () => {
     return value === "Weights" || value === "Cable" || value === "Bodyweight";
   };
 
-  const isUndefined = (value: string) => {
-    return value === "undefined";
-  };
-
   const item: Workout = {
-    id: !isUndefined(String(params.id)) ? String(params.id) : "",
-    name: !isUndefined(String(params.name)) ? String(params.name) : "",
-    day: !isUndefined(String(params.day)) ? String(params.day) : "",
+    id: getParamValue(params.id),
+    name: getParamValue(params.name),
+    day: getParamValue(params.day),
     type: isWorkoutType(params.type) ? params.type : "",
-    sets: !isUndefined(String(params.sets)) ? String(params.sets) : "",
-    reps: !isUndefined(String(params.reps)) ? String(params.reps) : "",
-    weight: !isUndefined(String(params.weight)) ? String(params.weight) : "",
-    remarks: !isUndefined(String(params.remarks)) ? String(params.remarks) : "",
+    sets:
+      params.sets && typeof params.sets === "string"
+        ? (JSON.parse(params.sets) as WorkoutSetType[])
+        : [],
+    remarks: getParamValue(params.remarks),
   };
 
   const [workout, setWorkout] = useState<Workout>(item ? item : emptyWorkout);
@@ -82,10 +78,12 @@ const editWorkout = () => {
     if (
       workout.name === "" ||
       workout.day === "" ||
-      workout.sets === "" ||
-      workout.reps === "" ||
-      workout.type === "" ||
-      (workout.type !== "Bodyweight" && workout.weight === "")
+      workout.sets.length === 0 ||
+      !workout.sets.every(
+        (set) =>
+          !isEmptyWorkoutInput(set.reps) && !isEmptyWorkoutInput(set.weight)
+      ) ||
+      workout.type === ""
     ) {
       setError("Please enter required fields");
     } else {
@@ -101,7 +99,9 @@ const editWorkout = () => {
   };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, paddingTop: insets.top }}>
+    <GestureHandlerRootView
+      style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom }}
+    >
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
