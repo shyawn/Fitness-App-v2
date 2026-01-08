@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Workout } from "@/types";
+import { Workout, WorkoutSetType } from "@/types";
 
 const initialState: Workout[] = [];
 
@@ -23,9 +23,24 @@ const workoutSlice = createSlice({
     setWorkoutOrder: (state, action: PayloadAction<Workout[]>) => {
       return action.payload;
     },
+    editWorkoutSets: (
+      state,
+      action: PayloadAction<{ workoutId: string; sets: WorkoutSetType[] }>
+    ) => {
+      const { workoutId, sets } = action.payload;
+      const index = state.findIndex((workout) => workout.id === workoutId);
+      if (index !== -1) {
+        state[index].sets = sets;
+      }
+    },
   },
 });
 
-export const { addWorkout, deleteWorkout, storeEditWorkout, setWorkoutOrder } =
-  workoutSlice.actions;
+export const {
+  addWorkout,
+  deleteWorkout,
+  storeEditWorkout,
+  setWorkoutOrder,
+  editWorkoutSets,
+} = workoutSlice.actions;
 export default workoutSlice.reducer;
