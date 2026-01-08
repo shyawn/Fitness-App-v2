@@ -78,6 +78,17 @@ const SearchWorkout = ({
             setShowDropdown(true);
           }}
         />
+        {searchText !== "" && (
+          <TouchableOpacity
+            style={styles.cancelIcon}
+            onPress={() => {
+              setSearchText("");
+              setWorkout({ ...workout, name: "" });
+            }}
+          >
+            <Ionicons name="close-outline" color="white" size={12} />
+          </TouchableOpacity>
+        )}
       </View>
 
       {showDropdown && (
@@ -133,6 +144,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#eee",
     backgroundColor: "#fefefd",
+  },
+  cancelIcon: {
+    width: hp(2),
+    height: hp(2),
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#999",
+    padding: 2,
   },
 });
 
