@@ -1,11 +1,16 @@
+export type WorkoutSetType = {
+  id: string;
+  reps: string;
+  weight: string;
+  done: boolean;
+};
+
 export type Workout = {
   id: string;
   name: string;
   day: string;
   type: WorkoutType;
-  sets: string;
-  reps: string;
-  weight: string;
+  sets: WorkoutSetType[];
   remarks?: string;
   priority?: number;
 };
