@@ -25,8 +25,10 @@ const SelectWorkoutType = ({
 
   return (
     <View
-      className="bg-[#D7D7D7] rounded-xl p-1 mt-6 flex flex-row gap-2"
-      style={error && { borderWidth: 1, borderColor: "red" }}
+      style={[
+        styles.container,
+        error && { borderWidth: 1, borderColor: "red" },
+      ]}
     >
       {workoutTypes.map((type, idx) => (
         <TouchableOpacity
@@ -48,6 +50,14 @@ const SelectWorkoutType = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#e6e6e6",
+    borderRadius: 8,
+    padding: 4,
+    marginTop: 20,
+    flexDirection: "row",
+    gap: 8,
+  },
   active: {
     backgroundColor: "#999",
   },
