@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import DragList, { DragListRenderItemInfo } from "react-native-draglist";
 import { Workout } from "@/types";
 import {
@@ -8,9 +8,14 @@ import {
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
-import { deleteWorkout } from "@/store/workoutPlan/workoutSlice";
+import {
+  deleteWorkout,
+  editWorkoutSets,
+} from "@/store/workoutPlan/workoutSlice";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { useState } from "react";
+import WorkoutSetComp from "./editWorkout/WorkoutSetComp";
 
 interface DraggableProps {
   selectedDay: string;
@@ -24,6 +29,7 @@ export default function DraggableList({
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
   const workoutList = useSelector((state: RootState) => state.workout);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   function keyExtractor(item: Workout) {
     return item.id;
@@ -36,52 +42,92 @@ export default function DraggableList({
 
   function renderItem(info: DragListRenderItemInfo<Workout>) {
     const { item, onDragStart, onDragEnd } = info;
+    const isOpen = expandedId === item.id;
 
-    const isWeight = item.weight && item.type !== "Bodyweight";
+    const handleUpdateRedux = (action: any) => {
+      const updatedWorkout =
+        typeof action === "function"
+          ? action(item) // if function, pass the current item as 'prev'
+          : action; // if object, use it directly
+
+      dispatch(
+        editWorkoutSets({
+          workoutId: item.id,
+          sets: updatedWorkout.sets,
+        })
+      );
+    };
+
+    const workoutComplete = () => {
+      return item.sets.every((set) => set.done === true);
+    };
 
     return (
-      <TouchableOpacity
-        key={item.id}
-        onLongPress={() => {
-          onDragStart();
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-        }}
-        onPressOut={onDragEnd}
-        className="w-full my-1 p-3 border-[1px] bg-white border-[#A9A9A9] rounded-lg flex flex-row justify-between items-center"
+      <View
+        className="my-1 border-[1px] bg-white border-[#A9A9A9] rounded-lg overflow-hidden"
+        style={workoutComplete() && { backgroundColor: "#D0F0C0" }}
       >
-        <View className="flex">
-          <Text className="font-semibold text-[16px] capitalize mb-1">
-            {item.name}
-          </Text>
-          <Text className="text-[#636363]">
-            {item.sets} x {item.reps} reps ({isWeight && item.weight}
-            {isWeight && " "}
-            {isWeight ? "kg" : "bodyweight"})
-          </Text>
-        </View>
-
-        <View className="flex flex-row gap-4">
-          <TouchableOpacity
-            style={{ height: hp(4), width: hp(4) }}
-            className="bg-[#999] rounded-full items-center justify-center"
-            onPress={() =>
-              router.push({ pathname: "/editWorkout", params: item })
-            }
+        <Pressable
+          key={item.id}
+          onPress={() => setExpandedId(isOpen ? null : item.id)}
+          onLongPress={() => {
+            onDragStart();
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+          }}
+          onPressOut={onDragEnd}
+          className="p-3"
+        >
+          <View
+            className="w-full flex flex-row justify-between items-center"
+            style={isOpen && { marginBottom: 10 }}
           >
-            <Ionicons name="pencil" size={wp(4)} color="white" />
-          </TouchableOpacity>
+            <View className="flex">
+              <Text className="font-semibold text-[16px] capitalize mb-1">
+                {item.name}
+              </Text>
+              <Text className="text-[#636363]">
+                {item.sets.length} sets &bull;{" "}
+                {item.sets.filter((set) => set.done).length} completed
+              </Text>
+            </View>
 
-          <TouchableOpacity
-            style={{ height: hp(4), width: hp(4) }}
-            className="bg-rose-500 rounded-full items-center justify-center"
-            onPress={() => {
-              dispatch(deleteWorkout(item));
-            }}
-          >
-            <Ionicons name="trash" size={hp(2.5)} color="white" />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
+            <View className="flex flex-row gap-4">
+              <TouchableOpacity
+                style={{ height: hp(4), width: hp(4) }}
+                className="bg-[#999] rounded-full items-center justify-center"
+                onPress={() =>
+                  router.push({
+                    pathname: "/editWorkout",
+                    params: { ...item, sets: JSON.stringify(item.sets) },
+                  })
+                }
+              >
+                <Ionicons name="pencil" size={wp(4)} color="white" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ height: hp(4), width: hp(4) }}
+                className="bg-rose-500 rounded-full items-center justify-center"
+                onPress={() => {
+                  dispatch(deleteWorkout(item));
+                }}
+              >
+                <Ionicons name="trash" size={hp(2.5)} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Pressable>
+
+        {isOpen && (
+          <View className="px-3 pb-3">
+            <WorkoutSetComp
+              workout={item}
+              nested={true}
+              setWorkout={handleUpdateRedux}
+            />
+          </View>
+        )}
+      </View>
     );
   }
 
