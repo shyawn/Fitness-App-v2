@@ -14,7 +14,7 @@ const StepsBlockComp = () => {
   return (
     <View className="flex flex-row gap-3" style={styles.mainContainer}>
       <View
-        className="flex border-[1px] border-[#D7D7D7] bg-white"
+        className="flex border-[1px] border-[#D7D7D7] bg-white shadow-sm"
         style={styles.container}
       >
         <View style={isBlurred && { opacity: 0.5 }}>
@@ -111,7 +111,6 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingHorizontal: 16,
     borderRadius: 24,
-    elevation: 1,
   },
   healthAppContainer: {
     position: "absolute",

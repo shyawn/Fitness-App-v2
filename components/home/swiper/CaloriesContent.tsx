@@ -28,7 +28,7 @@ const CaloriesContent = ({ showMacroFraction }: CaloriesContentProp) => {
 
   return (
     <View
-      className="flex flex-row items-center justify-between border-[1px] border-[#D7D7D7] bg-white"
+      className="flex flex-row items-center justify-between border-[1px] border-[#D7D7D7] bg-white shadow-sm"
       style={styles.container}
     >
       <View>
@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingHorizontal: 32,
     borderRadius: 24,
-    elevation: 1,
   },
   weightFraction: {
     color: "#999",
