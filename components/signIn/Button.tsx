@@ -39,14 +39,6 @@ export default function Button({
           <Ionicons name="person-add-outline" size={20} color="white" />
         )}
         <Text className="text-white font-semibold text-lg ml-2">
-          {/* {loading && isSignin
-            ? "Signing In..."
-            : loading && !isSignin
-            ? "Creating Account..."
-            : isSignin
-            ? "Sign In"
-            : "Create Account"} */}
-
           {loading ? loadingText : text}
         </Text>
       </View>

@@ -37,3 +37,10 @@ export const getParamValue = (param: string | string[] | undefined): string => {
 export const isEmptyWorkoutInput = (value: string) => {
   return value === "" || Number(value) === 0;
 };
+
+export const formatJoinDate = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+};
