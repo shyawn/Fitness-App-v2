@@ -82,7 +82,7 @@ export default function Profile() {
               setting.id === profileSettings.length ? "mb-10" : "mb-6"
             }`}
           >
-            <View className="bg-[#f3f3f3] rounded-2xl shadow-md border border-gray-100 p-4">
+            <View className="bg-[#f8f8f8] rounded-2xl shadow-md border border-gray-100 p-4">
               {setting.collection.map((item, idx) => (
                 <View
                   key={idx}
