@@ -10,9 +10,10 @@ const BackIcon = () => {
   return (
     <TouchableOpacity
       onPress={() => router.back()}
-      className="absolute rounded-full left-4 mt-2"
+      style={{ height: hp(4.5), width: hp(4.5), elevation: 1 }}
+      className="absolute rounded-full left-4 bg-[#f8f8f8] flex items-center justify-center mt-2"
     >
-      <Ionicons name="arrow-back-circle-sharp" size={hp(5)} color="#D7D7D7" />
+      <Ionicons name="arrow-back" size={hp(2.8)} color="#404040" />
     </TouchableOpacity>
   );
 };

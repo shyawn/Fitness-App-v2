@@ -11,8 +11,8 @@ import {
 import ExerciseList from "@/components/ExerciseList";
 import { ScrollView } from "react-native-virtualized-view";
 import { SafeAreaView } from "react-native-safe-area-context";
-import SecondaryBackIcon from "@/components/common/SecondaryBackIcon";
 import { ExerciseType } from "@/types";
+import BackIcon from "@/components/common/BackIcon";
 
 export default function Exercises() {
   const [exercises, setExercises] = useState(dummyExercises);
@@ -35,7 +35,7 @@ export default function Exercises() {
         <StatusBar style="dark" />
         <Image source={item.image} style={{ width: wp(100), height: hp(45) }} />
 
-        <SecondaryBackIcon />
+        <BackIcon />
 
         <View className="mx-4 space-y-3 mt-4">
           <Text
