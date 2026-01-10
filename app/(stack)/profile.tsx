@@ -83,7 +83,15 @@ export default function Profile() {
           {/* settings options */}
           <View className="bg-white rounded-2xl shadow-sm border border-gray-100">
             {profileSettings.map((item, idx) => (
-              <TouchableOpacity key={idx} style={styles.settingsContainer}>
+              <TouchableOpacity
+                key={idx}
+                style={[
+                  styles.settingsContainer,
+                  idx === profileSettings.length - 1 && {
+                    borderBottomWidth: 0,
+                  },
+                ]}
+              >
                 <View className="flex-row items-center">
                   <View
                     style={[
