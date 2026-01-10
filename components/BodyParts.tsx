@@ -15,7 +15,7 @@ export default function BodyParts() {
   return (
     <View className="mx-4">
       <Text
-        style={{ fontSize: hp(3.5) }}
+        style={{ fontSize: hp(3) }}
         className="font-semibold text-neutral-700 pb-2"
       >
         Exercises

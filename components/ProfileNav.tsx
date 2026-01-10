@@ -11,13 +11,13 @@ const ProfileNav = () => {
     <View className="flex-row justify-between items-center px-6 mt-6">
       <View className="flex flex-row gap-2">
         <Text
-          style={{ fontSize: hp(4) }}
+          style={{ fontSize: hp(3.5) }}
           className="font-bold tracking-wider text-neutral-700"
         >
           READY TO
         </Text>
         <Text
-          style={{ fontSize: hp(4) }}
+          style={{ fontSize: hp(3.5) }}
           className="font-bold tracking-wider text-rose-500"
         >
           WORKOUT
