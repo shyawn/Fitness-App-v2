@@ -47,7 +47,7 @@ export default function Profile() {
         {/* user info card */}
         <View className="px-6 mb-6">
           <View className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-            <View className="flex-row items-center mb-4">
+            <View className="flex-row items-center">
               <View className="w-16 h-16 bg-[#999] rounded-full items-center justify-center mr-4">
                 <Image
                   source={{
@@ -74,64 +74,78 @@ export default function Profile() {
           </View>
         </View>
 
-        {/* account settings */}
-        <View className="px-6 mb-6">
-          <Text className="text-lg font-semibold text-gray-900 mb-4">
-            Account Settings
-          </Text>
-
-          {/* settings options */}
-          <View className="bg-white rounded-2xl shadow-sm border border-gray-100">
-            {profileSettings.map((item, idx) => (
-              <TouchableOpacity
-                key={idx}
-                style={[
-                  styles.settingsContainer,
-                  idx === profileSettings.length - 1 && {
-                    borderBottomWidth: 0,
-                  },
-                ]}
-              >
-                <View className="flex-row items-center">
-                  <View
-                    style={[
-                      styles.iconContainer,
-                      { backgroundColor: item.bgColor },
-                    ]}
-                  >
+        {profileSettings.map((setting) => (
+          <View
+            key={setting.id}
+            className={`px-6 ${
+              setting.id === profileSettings.length ? "mb-10" : "mb-6"
+            }`}
+          >
+            <View className="bg-[#f3f3f3] rounded-2xl shadow-md border border-gray-100 p-4">
+              {setting.collection.map((item, idx) => (
+                <View
+                  key={idx}
+                  style={[
+                    styles.settingsContainer,
+                    idx === 0 && {
+                      paddingTop: 0,
+                    },
+                    idx === setting.collection.length - 1 && {
+                      borderBottomWidth: 0,
+                      paddingBottom: 0,
+                    },
+                  ]}
+                >
+                  <TouchableOpacity style={styles.buttonContainer}>
+                    <View className="flex-row items-center">
+                      <View style={[styles.iconContainer]}>
+                        <Ionicons
+                          name={
+                            item.title === "Personal Details"
+                              ? "cloudy"
+                              : item.title === "Adjust Macronutrients"
+                              ? "disc-outline"
+                              : item.title === "Goal & Current Weight"
+                              ? "flag"
+                              : item.title === "Language"
+                              ? "language-outline"
+                              : item.title === "Edit Profile"
+                              ? "person"
+                              : item.title === "Notifications"
+                              ? "notifications"
+                              : item.title === "Preferences"
+                              ? "settings-outline"
+                              : "help-circle-outline"
+                          }
+                          size={20}
+                          color="#404040"
+                        />
+                      </View>
+                      <Text className="font-medium" style={Typography.body}>
+                        {item.title}
+                      </Text>
+                    </View>
                     <Ionicons
-                      name={
-                        item.title === "Edit Profile"
-                          ? "person-outline"
-                          : item.title === "Notifications"
-                          ? "notifications-outline"
-                          : item.title === "Preferences"
-                          ? "settings-outline"
-                          : "help-circle-outline"
-                      }
-                      size={20}
-                      color={item.iconColor}
+                      name="chevron-forward"
+                      size={16}
+                      color="#6B7280"
                     />
-                  </View>
-                  <Text className="text-gray-900 font-medium">
-                    {item.title}
-                  </Text>
+                  </TouchableOpacity>
                 </View>
-                <Ionicons name="chevron-forward" size={20} color="#6B7280" />
-              </TouchableOpacity>
-            ))}
+              ))}
+            </View>
           </View>
-        </View>
+        ))}
 
         <View className="px-6 mb-8">
           <TouchableOpacity
             onPress={handleSignOut}
-            className="bg-rose-500 rounded-2xl p-4 shadow-sm"
+            className="bg-[#f7f3f3] rounded-2xl p-4 shadow-md"
             activeOpacity={0.8}
           >
-            <View className="flex-row items-center justify-center">
-              <Ionicons name="log-out-outline" size={20} color="white" />
-              <Text className="text-white font-semibold text-lg ml-2">
+            <View className="flex-row items-center">
+              <Ionicons name="log-out-outline" size={20} color="#404040" />
+              <Text style={Typography.body} className="font-semibold ml-3">
                 Sign Out
               </Text>
             </View>
@@ -144,17 +158,16 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
   settingsContainer: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: "#c1c1c1",
+  },
+  buttonContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderColor: "#f3f4f6",
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: "100%",
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,

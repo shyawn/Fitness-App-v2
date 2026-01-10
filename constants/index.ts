@@ -19,10 +19,24 @@ export const week = [
 ];
 
 export const profileSettings = [
-  { title: "Edit Profile", bgColor: "#dbeafe", iconColor: "#3B82F6" },
-  { title: "Notifications", bgColor: "#dcfce7", iconColor: "#10B981" },
-  { title: "Preferences", bgColor: "#f3e8ff", iconColor: "#8B5CF6" },
-  { title: "Help & Support", bgColor: "#ffedd5", iconColor: "#F59E0B" },
+  {
+    id: 1,
+    collection: [
+      { title: "Personal Details" },
+      { title: "Adjust Macronutrients" },
+      { title: "Goal & Current Weight" },
+      { title: "Language" },
+    ],
+  },
+  {
+    id: 2,
+    collection: [
+      { title: "Edit Profile" },
+      { title: "Notifications" },
+      { title: "Preferences" },
+      { title: "Help & Support" },
+    ],
+  },
 ];
 
 export const workoutTypes: WorkoutType[] = ["Weights", "Cable", "Bodyweight"];
