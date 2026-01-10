@@ -9,7 +9,7 @@ export default function Home() {
     <SafeAreaView className="flex-1 flex space-y-5">
       <StatusBar style="dark" />
       <View style={styles.container}>
-        <HomeNav title="MyFitnessApp" />
+        <HomeNav title="Home" />
 
         <HomeSwiper />
       </View>

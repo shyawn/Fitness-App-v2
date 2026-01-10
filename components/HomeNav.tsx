@@ -1,9 +1,10 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import ScheduleSwiper from "./ScheduleSwiper";
 import ProfileIcon from "./common/ProfileIcon";
 import { useRouter } from "expo-router";
+import { useUser } from "@clerk/clerk-expo";
+import { Typography } from "@/constants/typography";
 
 interface HomeNavProps {
   title: string;
@@ -11,15 +12,18 @@ interface HomeNavProps {
 
 const HomeNav = ({ title }: HomeNavProps) => {
   const router = useRouter();
+  const { user } = useUser();
+  const isHomePage = title === "Home";
 
   return (
     <View>
       <View className="flex flex-row items-center justify-between px-6 mt-6 mb-5">
-        <Text
-          style={{ fontSize: hp(4) }}
-          className="text-left font-semibold text-neutral-700"
-        >
-          {title}
+        <Text className="font-semibold" style={Typography.header}>
+          {isHomePage ? "Welcome, " : title}
+
+          {isHomePage && (
+            <Text className="capitalize">{user?.firstName || "Athlete"}!</Text>
+          )}
         </Text>
 
         <ProfileIcon onPress={() => router.push("/(stack)/profile")} />
