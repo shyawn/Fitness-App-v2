@@ -58,14 +58,15 @@ export default function DraggableList({
       );
     };
 
-    const workoutComplete = () => {
-      return item.sets.every((set) => set.done === true);
-    };
+    const workoutComplete =
+      Array.isArray(item?.sets) &&
+      item.sets.length > 0 &&
+      item.sets.every((set) => set.done === true);
 
     return (
       <View
         className="my-1 border-[1px] bg-white border-[#A9A9A9] rounded-lg overflow-hidden"
-        style={workoutComplete() && { backgroundColor: "#D0F0C0" }}
+        style={workoutComplete && { backgroundColor: "#D0F0C0" }}
       >
         <Pressable
           key={item.id}
@@ -86,8 +87,11 @@ export default function DraggableList({
                 {item.name}
               </Text>
               <Text className="text-[#636363]">
-                {item.sets.length} sets &bull;{" "}
-                {item.sets.filter((set) => set.done).length} completed
+                {Array.isArray(item?.sets) ? item.sets.length : 0} sets &bull;{" "}
+                {Array.isArray(item?.sets)
+                  ? item.sets.filter((set) => set.done).length
+                  : 0}{" "}
+                completed
               </Text>
             </View>
 
