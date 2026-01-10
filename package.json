@@ -28,6 +28,7 @@
     "@reduxjs/toolkit": "^2.6.0",
     "axios": "^1.8.1",
     "expo": "^54.0.30",
+    "expo-application": "~7.0.8",
     "expo-auth-session": "~7.0.10",
     "expo-blur": "~15.0.8",
     "expo-constants": "~18.0.12",

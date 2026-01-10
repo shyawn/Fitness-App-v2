@@ -14,6 +14,7 @@ import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Typography } from "@/constants/typography";
 import { formatJoinDate } from "@/utils";
 import { profileSettings } from "@/constants";
+import * as Application from "expo-application";
 
 export default function Profile() {
   const { signOut } = useAuth();
@@ -137,7 +138,7 @@ export default function Profile() {
           </View>
         ))}
 
-        <View className="px-6 mb-8">
+        <View className="px-6 mb-6">
           <TouchableOpacity
             onPress={handleSignOut}
             className="bg-[#f7f3f3] rounded-2xl p-4 shadow-md"
@@ -151,6 +152,10 @@ export default function Profile() {
             </View>
           </TouchableOpacity>
         </View>
+
+        <Text style={[Typography.smallBody, styles.versionText]}>
+          VERSION {Application.nativeApplicationVersion}
+        </Text>
       </ScrollView>
     </SafeAreaView>
   );
@@ -171,5 +176,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 12,
+  },
+  versionText: {
+    textAlign: "center",
+    fontSize: 10,
+    marginBottom: 20,
   },
 });
