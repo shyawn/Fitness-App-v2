@@ -40,13 +40,7 @@ export default function Index() {
             style={{ fontSize: hp(5) }}
             className="text-white font-bold tracking-wide"
           >
-            Best <Text className="text-rose-500">Workouts</Text>
-          </Text>
-          <Text
-            style={{ fontSize: hp(5) }}
-            className="text-white font-bold tracking-wide"
-          >
-            For you
+            My<Text className="text-rose-500">Fitness</Text>App
           </Text>
         </Animated.View>
 
@@ -54,7 +48,7 @@ export default function Index() {
           <TouchableOpacity
             style={{ height: hp(7), width: wp(80) }}
             onPress={() => router.push("/home")}
-            className="bg-rose-500 flex items-center justify-center mx-auto rounded-full border-[1px] border-neutral-200"
+            className="bg-rose-500 flex items-center justify-center mx-auto rounded-full border-[0.5px] border-neutral-200"
           >
             <Text
               style={{ fontSize: hp(3) }}
