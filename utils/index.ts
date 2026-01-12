@@ -1,5 +1,3 @@
-import { WorkoutType } from "@/types";
-
 export const calcMacrosFulfilled = (goal: number, tracked: number) => {
   return (tracked / goal) * 100;
 };
@@ -25,7 +23,30 @@ export const hydrationServingRange = () => {
 
   return values.map((val) => ({
     value: val,
-    // label: `${val} ml`,
+  }));
+};
+
+export const heightRange = () => {
+  const values = [];
+
+  for (let i = 60; i <= 210; i += 1) {
+    values.push(i);
+  }
+  return values.map((val) => ({
+    value: val,
+    label: `${val} cm`,
+  }));
+};
+
+export const weightRange = () => {
+  const values = [];
+
+  for (let i = 60; i <= 210; i += 1) {
+    values.push(i);
+  }
+  return values.map((val) => ({
+    value: val,
+    label: `${val} kg`,
   }));
 };
 

@@ -1,4 +1,9 @@
-import { ExerciseType, BodyPartExercise, WorkoutType } from "@/types";
+import {
+  ExerciseType,
+  BodyPartExercise,
+  WorkoutType,
+  GenderType,
+} from "@/types";
 
 export const sliderImages = [
   require("../assets/images/slide-one.png"),
@@ -38,6 +43,8 @@ export const profileSettings = [
     ],
   },
 ];
+
+export const genderOptions: GenderType[] = ["Male", "Female", "Other"];
 
 export const workoutTypes: WorkoutType[] = ["Weights", "Cable", "Bodyweight"];
 

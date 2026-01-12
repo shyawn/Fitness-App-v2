@@ -32,3 +32,5 @@ export type BodyPartExercise = {
   secondaryMuscles: string[] | string;
   target: string;
 };
+
+export type GenderType = "Male" | "Female" | "Other" | "";
