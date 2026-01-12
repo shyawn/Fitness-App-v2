@@ -13,7 +13,7 @@ export default function RootLayout() {
   const renderLoading = () => {
     return (
       <View>
-        <ActivityIndicator size={"large"} />
+        <ActivityIndicator size={"large"} color="#2563eb" />
       </View>
     );
   };
