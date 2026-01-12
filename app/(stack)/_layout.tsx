@@ -8,7 +8,7 @@ export default function RootStack() {
   if (!isLoaded) {
     return (
       <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#f43f5e" />
       </View>
     );
   }
