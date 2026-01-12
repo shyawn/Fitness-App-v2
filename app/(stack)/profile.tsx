@@ -15,10 +15,12 @@ import { Typography } from "@/constants/typography";
 import { formatJoinDate } from "@/utils";
 import { profileSettings } from "@/constants";
 import * as Application from "expo-application";
+import { useRouter } from "expo-router";
 
 export default function Profile() {
   const { signOut } = useAuth();
   const { user } = useUser();
+  const router = useRouter();
 
   const joinDate = user?.createdAt ? new Date(user.createdAt) : new Date();
   const daysSinceJoining = Math.floor(
@@ -97,7 +99,17 @@ export default function Profile() {
                     },
                   ]}
                 >
-                  <TouchableOpacity style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    style={styles.buttonContainer}
+                    onPress={() =>
+                      router.push(
+                        item.title === "Personal Details" ||
+                          item.title.includes("Weight")
+                          ? "/personalDetails"
+                          : "/"
+                      )
+                    }
+                  >
                     <View className="flex-row items-center">
                       <View style={[styles.iconContainer]}>
                         <Ionicons
