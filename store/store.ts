@@ -14,12 +14,14 @@ import workoutReducer from "./workoutPlan/workoutSlice";
 import scheduleReducer from "./schedule/scheduleSlice";
 import macrosReducer from "./macros/macroSlice";
 import hydrationReducer from "./hydration/hydrationSlice";
+import profileReducer from "./profile/profileSlice";
 
 const rootReducer = combineReducers({
   workout: workoutReducer,
   schedule: scheduleReducer,
   macros: macrosReducer,
   hydration: hydrationReducer,
+  profile: profileReducer,
 });
 
 const persistConfig = {
