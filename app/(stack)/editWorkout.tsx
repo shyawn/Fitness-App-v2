@@ -117,7 +117,7 @@ const editWorkout = () => {
 
             <Text
               style={{ fontSize: hp(4) }}
-              className="px-6 mt-16 font-semibold text-neutral-700"
+              className="px-6 mt-20 font-semibold text-neutral-700"
             >
               Workout
             </Text>
