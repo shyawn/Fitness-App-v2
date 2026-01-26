@@ -25,13 +25,20 @@ const workoutSlice = createSlice({
     },
     editWorkoutSets: (
       state,
-      action: PayloadAction<{ workoutId: string; sets: WorkoutSetType[] }>
+      action: PayloadAction<{ workoutId: string; sets: WorkoutSetType[] }>,
     ) => {
       const { workoutId, sets } = action.payload;
       const index = state.findIndex((workout) => workout.id === workoutId);
       if (index !== -1) {
         state[index].sets = sets;
       }
+    },
+    resetWorkoutSets: (state) => {
+      state.map((workout) => {
+        workout.sets.forEach((set) => {
+          set.done = false;
+        });
+      });
     },
   },
 });
@@ -42,5 +49,6 @@ export const {
   storeEditWorkout,
   setWorkoutOrder,
   editWorkoutSets,
+  resetWorkoutSets,
 } = workoutSlice.actions;
 export default workoutSlice.reducer;

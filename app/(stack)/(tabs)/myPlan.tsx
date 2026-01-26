@@ -17,7 +17,7 @@ export default function MyPlan() {
   const dispatch = useDispatch();
 
   const filteredWorkoutList = workoutList.filter((item) =>
-    item.day.includes(day)
+    item.day.includes(day),
   );
 
   return (
