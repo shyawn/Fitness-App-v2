@@ -1,6 +1,6 @@
 import DraggableList from "@/components/DraggableList";
 import { RootState } from "@/store/store";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
@@ -39,14 +39,17 @@ Remember to get sufficient rest!`}
             </Text>
           </View>
         ) : (
-          <View style={{ flexDirection: "row" }}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            className="mb-20 h-4/5"
+          >
             <DraggableList
               selectedDay={day} // To filter by selected day
               onReordered={(updatedData: Workout[]) => {
                 dispatch(setWorkoutOrder(updatedData));
               }}
             />
-          </View>
+          </ScrollView>
         )}
       </View>
     </SafeAreaView>
