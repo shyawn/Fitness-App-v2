@@ -24,7 +24,7 @@ export default function Profile() {
 
   const joinDate = user?.createdAt ? new Date(user.createdAt) : new Date();
   const daysSinceJoining = Math.floor(
-    (new Date().getTime() - joinDate.getTime()) / (1000 * 60 * 60 * 24)
+    (new Date().getTime() - joinDate.getTime()) / (1000 * 60 * 60 * 24),
   );
 
   const handleSignOut = () => {
@@ -106,7 +106,9 @@ export default function Profile() {
                         item.title === "Personal Details" ||
                           item.title.includes("Weight")
                           ? "/personalDetails"
-                          : "/"
+                          : item.title.includes("Macronutrients")
+                            ? "/editMacros"
+                            : "/home",
                       )
                     }
                   >
@@ -117,18 +119,18 @@ export default function Profile() {
                             item.title === "Personal Details"
                               ? "cloudy"
                               : item.title === "Adjust Macronutrients"
-                              ? "disc-outline"
-                              : item.title === "Goal & Current Weight"
-                              ? "flag"
-                              : item.title === "Language"
-                              ? "language-outline"
-                              : item.title === "Edit Profile"
-                              ? "person"
-                              : item.title === "Notifications"
-                              ? "notifications"
-                              : item.title === "Preferences"
-                              ? "settings-outline"
-                              : "help-circle-outline"
+                                ? "disc-outline"
+                                : item.title === "Goal & Current Weight"
+                                  ? "flag"
+                                  : item.title === "Language"
+                                    ? "language-outline"
+                                    : item.title === "Edit Profile"
+                                      ? "person"
+                                      : item.title === "Notifications"
+                                        ? "notifications"
+                                        : item.title === "Preferences"
+                                          ? "settings-outline"
+                                          : "help-circle-outline"
                           }
                           size={20}
                           color="#404040"
