@@ -11,6 +11,7 @@ import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setSelectedDay } from "@/store/schedule/scheduleSlice";
+import { useDailyReset } from "@/hooks/useDailyReset";
 
 export default function Index() {
   const router = useRouter();
@@ -18,6 +19,8 @@ export default function Index() {
   useEffect(() => {
     dispatch(setSelectedDay(new Date().toISOString()));
   }, []);
+
+  useDailyReset();
 
   return (
     <View className="flex-1 flex justify-end">
