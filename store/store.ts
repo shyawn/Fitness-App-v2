@@ -15,6 +15,7 @@ import scheduleReducer from "./schedule/scheduleSlice";
 import macrosReducer from "./macros/macroSlice";
 import hydrationReducer from "./hydration/hydrationSlice";
 import profileReducer from "./profile/profileSlice";
+import resetReducer from "./reset/resetSlice";
 
 const rootReducer = combineReducers({
   workout: workoutReducer,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   macros: macrosReducer,
   hydration: hydrationReducer,
   profile: profileReducer,
+  reset: resetReducer,
 });
 
 const persistConfig = {
