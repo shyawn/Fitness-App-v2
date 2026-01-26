@@ -14,7 +14,7 @@ export default function EditBirthday() {
   const { dob } = useSelector((state: RootState) => state.profile);
 
   const [adjustedDob, setAdjustedDob] = useState(
-    dob !== "" ? dob : format(new Date(), "yyyy-MM-dd")
+    dob !== "" ? dob : format(new Date(), "yyyy-MM-dd"),
   );
 
   const dispatch = useDispatch();
@@ -30,9 +30,7 @@ export default function EditBirthday() {
       <View className="flex-1 px-6">
         <BackIcon />
 
-        <Text style={[Typography.subheader, styles.header]}>
-          Set Height & Weight
-        </Text>
+        <Text style={[Typography.subheader, styles.header]}>Set Birthday</Text>
 
         <View className="flex-1 justify-center items-center">
           <DatePicker
