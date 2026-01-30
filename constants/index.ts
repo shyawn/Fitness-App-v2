@@ -36,9 +36,9 @@ export const profileSettings = [
   {
     id: 2,
     collection: [
-      { title: "Edit Profile" },
-      { title: "Notifications" },
       { title: "Preferences" },
+      { title: "Notifications" },
+      { title: "Terms and Conditions" },
       { title: "Help & Support" },
     ],
   },
