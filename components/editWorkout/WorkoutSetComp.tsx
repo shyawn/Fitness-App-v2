@@ -54,6 +54,7 @@ const WorkoutSetComp = ({
           key={set.id}
           index={idx + 1}
           set={set}
+          bodyweight={workout.type === "Bodyweight"}
           nested={nested}
           setWorkout={(updateFn) => {
             const dummyPrev = { sets: workout.sets };

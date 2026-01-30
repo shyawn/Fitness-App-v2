@@ -19,6 +19,7 @@ import {
 interface IndivSetCompProps {
   index: number;
   set: WorkoutSetType;
+  bodyweight: boolean;
   nested?: boolean;
   setWorkout: Dispatch<SetStateAction<Workout>>;
   onDelete: (id: string) => void;
@@ -28,6 +29,7 @@ const IndivSetComp = ({
   index,
   set,
   nested = false,
+  bodyweight = false,
   setWorkout,
   onDelete,
 }: IndivSetCompProps) => {
@@ -40,7 +42,7 @@ const IndivSetComp = ({
       setWorkout((prev) => ({
         ...prev,
         sets: prev.sets.map((item) =>
-          item.id === set.id ? { ...item, [field]: value } : item
+          item.id === set.id ? { ...item, [field]: value } : item,
         ),
       }));
     }
@@ -51,7 +53,7 @@ const IndivSetComp = ({
       setWorkout((prev) => ({
         ...prev,
         sets: prev.sets.map((item) =>
-          item.id === set.id ? { ...item, done: !item.done } : item
+          item.id === set.id ? { ...item, done: !item.done } : item,
         ),
       }));
     }
@@ -68,7 +70,12 @@ const IndivSetComp = ({
       <Text style={[Typography.body, styles.index]}>{index}</Text>
 
       <View className="flex flex-row gap-3 justify-center">
-        <View style={{ width: nested ? "31%" : "33%" }}>
+        <View
+          style={[
+            { width: nested ? "31%" : "33%" },
+            bodyweight && { flexGrow: 0.5 },
+          ]}
+        >
           <Text style={[Typography.smallBody, styles.subheader]}>Reps</Text>
           <TextInput
             style={styles.inputContainer}
@@ -80,19 +87,21 @@ const IndivSetComp = ({
           />
         </View>
 
-        <View style={{ width: nested ? "31%" : "33%" }}>
-          <Text style={[Typography.smallBody, styles.subheader]}>
-            Weight (kg)
-          </Text>
-          <TextInput
-            style={styles.inputContainer}
-            placeholder="0"
-            placeholderTextColor="#999"
-            value={set.weight.toString()}
-            keyboardType="decimal-pad"
-            onChangeText={(text) => handleChange("weight", text)}
-          />
-        </View>
+        {!bodyweight && (
+          <View style={{ width: nested ? "31%" : "33%" }}>
+            <Text style={[Typography.smallBody, styles.subheader]}>
+              Weight (kg)
+            </Text>
+            <TextInput
+              style={styles.inputContainer}
+              placeholder="0"
+              placeholderTextColor="#999"
+              value={set.weight.toString()}
+              keyboardType="decimal-pad"
+              onChangeText={(text) => handleChange("weight", text)}
+            />
+          </View>
+        )}
       </View>
 
       <View className="flex flex-row gap-2">
