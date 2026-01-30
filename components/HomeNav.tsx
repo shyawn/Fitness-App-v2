@@ -5,6 +5,8 @@ import ProfileIcon from "./common/ProfileIcon";
 import { useRouter } from "expo-router";
 import { useUser } from "@clerk/clerk-expo";
 import { Typography } from "@/constants/typography";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface HomeNavProps {
   title: string;
@@ -13,6 +15,7 @@ interface HomeNavProps {
 const HomeNav = ({ title }: HomeNavProps) => {
   const router = useRouter();
   const { user } = useUser();
+  const { username } = useSelector((state: RootState) => state.profile);
   const isHomePage = title === "Home";
 
   return (
@@ -22,7 +25,10 @@ const HomeNav = ({ title }: HomeNavProps) => {
           {isHomePage ? "Welcome, " : title}
 
           {isHomePage && (
-            <Text className="capitalize">{user?.firstName || "Athlete"}!</Text>
+            <Text className="capitalize">
+              {username ? username.split(" ")[0] : user?.firstName || "Athlete"}
+              !
+            </Text>
           )}
         </Text>
 
