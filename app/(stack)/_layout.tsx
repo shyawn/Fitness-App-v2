@@ -1,9 +1,17 @@
 import { useAuth } from "@clerk/clerk-expo";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 export default function RootStack() {
-  const { isLoaded, isSignedIn, userId, sessionId, getToken } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.replace("/sign-in");
+    }
+  }, [isLoaded, isSignedIn]);
 
   if (!isLoaded) {
     return (
