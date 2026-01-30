@@ -91,6 +91,7 @@ export default function EditStepGoal() {
                   value={adjustedStep}
                   keyboardType="decimal-pad"
                   onChangeText={(text) => setAdjustedStep(text)}
+                  autoFocus
                   onFocus={() => setIsFocus(true)}
                   onBlur={() => setIsFocus(false)}
                 />
