@@ -2,6 +2,7 @@ import { GenderType } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ProfileState {
+  username: string;
   currentWeight: number;
   weightGoal: number;
   height: number;
@@ -11,6 +12,7 @@ interface ProfileState {
 }
 
 const initialState: ProfileState = {
+  username: "",
   currentWeight: 60,
   weightGoal: 60,
   height: 60,
@@ -28,7 +30,7 @@ const profileSlice = createSlice({
       action: PayloadAction<{
         type: "currentWeight" | "weightGoal" | "height";
         amount: number;
-      }>
+      }>,
     ) => {
       state[action.payload.type] = action.payload.amount;
     },
@@ -41,9 +43,17 @@ const profileSlice = createSlice({
     updateGender: (state, action: PayloadAction<GenderType>) => {
       state.gender = action.payload;
     },
+    updateUsername: (state, action: PayloadAction<string>) => {
+      state.username = action.payload;
+    },
   },
 });
 
-export const { updateHeightWeight, updateStepGoal, updateDob, updateGender } =
-  profileSlice.actions;
+export const {
+  updateHeightWeight,
+  updateStepGoal,
+  updateDob,
+  updateGender,
+  updateUsername,
+} = profileSlice.actions;
 export default profileSlice.reducer;

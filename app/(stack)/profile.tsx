@@ -16,11 +16,14 @@ import { formatJoinDate } from "@/utils";
 import { profileSettings } from "@/constants";
 import * as Application from "expo-application";
 import { useRouter } from "expo-router";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 export default function Profile() {
   const { signOut } = useAuth();
   const { user } = useUser();
   const router = useRouter();
+  const { username } = useSelector((state: RootState) => state.profile);
 
   const joinDate = user?.createdAt ? new Date(user.createdAt) : new Date();
   const daysSinceJoining = Math.floor(
@@ -48,7 +51,11 @@ export default function Profile() {
         </View>
 
         {/* user info card */}
-        <View className="px-6 mb-6">
+        <TouchableOpacity
+          className="px-6 mb-6"
+          activeOpacity={0.8}
+          onPress={() => router.push("/editUsername")}
+        >
           <View className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <View className="flex-row items-center">
               <View className="w-16 h-16 bg-[#999] rounded-full items-center justify-center mr-4">
@@ -62,9 +69,11 @@ export default function Profile() {
               </View>
               <View className="flex-1">
                 <Text className="text-xl font-semibold text-gray-900">
-                  {user?.firstName && user?.lastName
-                    ? `${user.firstName} ${user.lastName}`
-                    : user?.firstName || "User"}
+                  {username !== ""
+                    ? username
+                    : user?.firstName && user?.lastName
+                      ? `${user.firstName} ${user.lastName}`
+                      : user?.firstName || "User"}
                 </Text>
                 <Text className="text-gray-600">
                   {user?.emailAddresses?.[0]?.emailAddress}
@@ -75,7 +84,7 @@ export default function Profile() {
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
         {profileSettings.map((setting) => (
           <View
@@ -101,16 +110,18 @@ export default function Profile() {
                 >
                   <TouchableOpacity
                     style={styles.buttonContainer}
-                    onPress={() =>
-                      router.push(
+                    onPress={() => {
+                      if (
                         item.title === "Personal Details" ||
-                          item.title.includes("Weight")
-                          ? "/personalDetails"
-                          : item.title.includes("Macronutrients")
-                            ? "/editMacros"
-                            : "/home",
-                      )
-                    }
+                        item.title.includes("Weight")
+                      ) {
+                        router.push("/personalDetails");
+                      } else if (item.title.includes("Macronutrients")) {
+                        router.push("/editMacros");
+                      } else {
+                        router.back();
+                      }
+                    }}
                   >
                     <View className="flex-row items-center">
                       <View style={[styles.iconContainer]}>
