@@ -12,6 +12,12 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Ionicons from "@react-native-vector-icons/ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+} from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import {
@@ -21,7 +27,7 @@ import {
 import { startTimer } from "@/store/restTimer/restTimerSlice";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import WorkoutSetComp from "./editWorkout/WorkoutSetComp";
 
 const supersetColors: Record<string, string> = {
@@ -51,13 +57,18 @@ export default function DraggableList({
     return item.id;
   }
 
-  // Only render workout with selected day
-  const filteredWorkouts = workoutList.filter((item) =>
-    item.day.includes(selectedDay)
+  // Memoized so this only produces a new reference when the underlying data
+  // actually changes — react-native-draglist remounts every row whenever
+  // `data` changes reference, which would otherwise fire on every unrelated
+  // local state change here (e.g. expandedId) and interrupt an in-progress
+  // drag gesture.
+  const filteredWorkouts = useMemo(
+    () => workoutList.filter((item) => item.day.includes(selectedDay)),
+    [workoutList, selectedDay]
   );
 
   function renderItem(info: DragListRenderItemInfo<Workout>) {
-    const { item, onDragStart, onDragEnd } = info;
+    const { item, onDragStart, onDragEnd, isActive: isDragging } = info;
     const isOpen = expandedId === item.id;
 
     const handleUpdateRedux = (action: any) => {
@@ -107,8 +118,26 @@ export default function DraggableList({
               style={isOpen && { marginBottom: 10 }}
             >
               <View className="flex flex-1 pr-2">
-                <View className="flex-row items-center gap-2 mb-1">
-                  <Text className="font-semibold text-[16px] capitalize">
+                <Animated.View
+                  layout={LinearTransition.duration(150)}
+                  className="flex-row flex-wrap items-center gap-2 mb-1"
+                >
+                  {isDragging && (
+                    <Animated.View
+                      entering={FadeIn.duration(150)}
+                      exiting={FadeOut.duration(150)}
+                    >
+                      <MaterialIcons
+                        name="drag-indicator"
+                        size={18}
+                        color="#999"
+                      />
+                    </Animated.View>
+                  )}
+                  <Text
+                    className="font-semibold text-[16px] capitalize shrink"
+                    numberOfLines={1}
+                  >
                     {item.name}
                   </Text>
                   {item.supersetGroup && (
@@ -123,7 +152,7 @@ export default function DraggableList({
                       </Text>
                     </View>
                   )}
-                </View>
+                </Animated.View>
                 <Text className="text-[#636363]">
                   {Array.isArray(item?.sets) ? item.sets.length : 0} sets &bull;{" "}
                   {Array.isArray(item?.sets)
@@ -227,5 +256,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 6,
     paddingVertical: 2,
+    flexShrink: 0,
   },
 });
