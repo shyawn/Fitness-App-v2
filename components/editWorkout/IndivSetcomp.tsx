@@ -32,15 +32,13 @@ const IndivSetComp = ({
   onDelete,
 }: IndivSetCompProps) => {
   const handleChange = (field: "reps" | "weight", text: string) => {
-    const regex = field === "reps" ? REGEX.WHOLE_NUMBER : REGEX.DECIMAL;
-    const value =
-      text === "" ? 0 : field === "reps" ? parseInt(text) : parseFloat(text);
+    const regex = field === "reps" ? REGEX.WHOLE_NUMBER : REGEX.WEIGHT;
 
     if (text === "" || regex.test(text)) {
       setWorkout((prev) => ({
         ...prev,
         sets: prev.sets.map((item) =>
-          item.id === set.id ? { ...item, [field]: value } : item,
+          item.id === set.id ? { ...item, [field]: text } : item,
         ),
       }));
     }
