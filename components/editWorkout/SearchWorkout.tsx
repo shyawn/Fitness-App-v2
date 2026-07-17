@@ -11,7 +11,6 @@ import {
   StyleSheet,
 } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import SelectWorkoutType from "./SelectWorkoutType";
 
 interface SearchWorkoutProps {
   workout: Workout;
@@ -157,12 +156,6 @@ const SearchWorkout = ({
           {workout.day ? workout.day : "Select Workout Day"}
         </Text>
       </TouchableOpacity>
-
-      <SelectWorkoutType
-        workout={workout}
-        error={error !== "" && workout.type === ""}
-        setWorkout={setWorkout}
-      />
     </View>
   );
 };

@@ -9,7 +9,6 @@ export type Workout = {
   id: string;
   name: string;
   day: string;
-  type: WorkoutType;
   sets: WorkoutSetType[];
   remarks?: string;
   priority?: boolean;
@@ -17,8 +16,6 @@ export type Workout = {
   muscleGroup?: string;
   supersetGroup?: string | null;
 };
-
-export type WorkoutType = "Weights" | "Cable" | "Bodyweight" | "";
 
 export type ExerciseType = {
   name: string;

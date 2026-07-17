@@ -1,36 +1,48 @@
 import BackIcon from "@/components/common/BackIcon";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   StyleSheet,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
   Keyboard,
 } from "react-native";
+import {
+  useNavigation,
+  usePreventRemove,
+  type NavigationAction,
+} from "@react-navigation/native";
+import ConfirmModal from "@/components/common/ConfirmModal";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { Workout, WorkoutSetType, WorkoutType } from "@/types";
+import { Workout, WorkoutSetType } from "@/types";
 import SearchWorkout from "@/components/editWorkout/SearchWorkout";
 import WorkoutSet from "@/components/editWorkout/WorkoutSet";
 import WorkoutInput from "@/components/editWorkout/WorkoutInput";
 import BaseButton from "@/components/common/BaseButton";
-import { useDispatch } from "react-redux";
-import { addWorkout, storeEditWorkout } from "@/store/workoutPlan/workoutSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addWorkout,
+  storeEditWorkout,
+  setSupersetGroup,
+} from "@/store/workoutPlan/workoutSlice";
+import { RootState } from "@/store/store";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import SelectWorkoutDayContent from "@/components/editWorkout/SelectWorkoutDayContent";
+import SelectSupersetContent from "@/components/editWorkout/SelectSupersetContent";
 import { useBottomSheet } from "@/components/common/BottomSheetComp";
-import { getParamValue, isEmptyWorkoutInput } from "@/utils";
+import { getParamValue, isEmptyWorkoutInput, nextSupersetGroup } from "@/utils";
 
 const emptyWorkout: Workout = {
   id: "",
   name: "",
   day: "",
-  type: "",
   sets: [],
   remarks: "",
   restSeconds: undefined,
@@ -41,15 +53,10 @@ const editWorkout = () => {
   const [error, setError] = useState("");
   const params = useLocalSearchParams();
 
-  const isWorkoutType = (value: any): value is WorkoutType => {
-    return value === "Weights" || value === "Cable" || value === "Bodyweight";
-  };
-
   const item: Workout = {
     id: getParamValue(params.id),
     name: getParamValue(params.name),
     day: getParamValue(params.day),
-    type: isWorkoutType(params.type) ? params.type : "",
     sets:
       params.sets && typeof params.sets === "string"
         ? (JSON.parse(params.sets) as WorkoutSetType[])
@@ -63,10 +70,30 @@ const editWorkout = () => {
   };
 
   const [workout, setWorkout] = useState<Workout>(item ? item : emptyWorkout);
+  const initialWorkoutRef = useRef(item);
+  const justSavedRef = useRef(false);
+  const [pendingLeaveAction, setPendingLeaveAction] =
+    useState<NavigationAction | null>(null);
 
   const router = useRouter();
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { expandSheet, closeSheet } = useBottomSheet();
+  const workoutList = useSelector((state: RootState) => state.workout);
+
+  const hasUnsavedChanges =
+    JSON.stringify(workout) !== JSON.stringify(initialWorkoutRef.current);
+
+  usePreventRemove(hasUnsavedChanges && !justSavedRef.current, ({ data }) => {
+    setPendingLeaveAction(data.action);
+  });
+
+  const handleDiscardChanges = () => {
+    if (pendingLeaveAction) {
+      navigation.dispatch(pendingLeaveAction);
+    }
+    setPendingLeaveAction(null);
+  };
 
   const handleSelectDay = () => {
     Keyboard.dismiss();
@@ -80,6 +107,53 @@ const editWorkout = () => {
 
   const dispatch = useDispatch();
 
+  const supersetPartner = workoutList.find(
+    (w) =>
+      w.id !== workout.id &&
+      w.day === workout.day &&
+      w.supersetGroup &&
+      w.supersetGroup === workout.supersetGroup
+  );
+
+  const handleSelectSuperset = (partner: Workout | null) => {
+    // Clear the old partner's group if we're switching to a different
+    // exercise (or to none) so pairings never point at stale partners.
+    if (
+      workout.supersetGroup &&
+      supersetPartner &&
+      supersetPartner.id !== partner?.id
+    ) {
+      dispatch(
+        setSupersetGroup({
+          workoutId: supersetPartner.id,
+          supersetGroup: null,
+        })
+      );
+    }
+
+    if (partner) {
+      const group =
+        partner.supersetGroup ??
+        workout.supersetGroup ??
+        nextSupersetGroup(workout.day, workoutList);
+      dispatch(setSupersetGroup({ workoutId: partner.id, supersetGroup: group }));
+      setWorkout((prev) => ({ ...prev, supersetGroup: group }));
+    } else {
+      setWorkout((prev) => ({ ...prev, supersetGroup: null }));
+    }
+  };
+
+  const handleSelectSupersetPress = () => {
+    Keyboard.dismiss();
+    expandSheet(
+      <SelectSupersetContent
+        workout={workout}
+        onSelect={handleSelectSuperset}
+        onClose={closeSheet}
+      />
+    );
+  };
+
   const saveWorkout = () => {
     const isEditing = typeof params.id === "string" && params.id.length > 0;
     if (
@@ -89,8 +163,7 @@ const editWorkout = () => {
       !workout.sets.every(
         (set) =>
           !isEmptyWorkoutInput(set.reps) && !isEmptyWorkoutInput(set.weight)
-      ) ||
-      workout.type === ""
+      )
     ) {
       setError("Please enter required fields");
     } else {
@@ -99,6 +172,7 @@ const editWorkout = () => {
       } else {
         dispatch(addWorkout({ ...workout, id: Date.now().toString() }));
       }
+      justSavedRef.current = true;
       setWorkout(emptyWorkout);
       setError("");
       router.back();
@@ -169,6 +243,31 @@ const editWorkout = () => {
 
             <View style={styles.divider} />
 
+            <View className="px-6 mb-4">
+              <Text className="mb-2 font-semibold text-[18px] text-gray-500">
+                Superset
+              </Text>
+              <TouchableOpacity
+                className="w-full p-3 rounded-lg border-[1px] border-[#D7D7D7] bg-white"
+                style={workout.day === "" && { opacity: 0.5 }}
+                disabled={workout.day === ""}
+                onPress={handleSelectSupersetPress}
+              >
+                <Text
+                  className="capitalize"
+                  style={!supersetPartner && { color: "#999" }}
+                >
+                  {workout.day === ""
+                    ? "Select a day first"
+                    : supersetPartner
+                      ? `Superset with ${supersetPartner.name}`
+                      : "None"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.divider} />
+
             <View className="px-6">
               <Text className="mb-2 font-semibold text-[18px] text-gray-500">
                 Remarks
@@ -191,6 +290,17 @@ const editWorkout = () => {
           </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+
+      <ConfirmModal
+        visible={pendingLeaveAction !== null}
+        title="Unsaved Changes"
+        message="You have unsaved changes. Are you sure you want to discard them?"
+        confirmText="Discard"
+        cancelText="Keep Editing"
+        destructive
+        onConfirm={handleDiscardChanges}
+        onCancel={() => setPendingLeaveAction(null)}
+      />
     </GestureHandlerRootView>
   );
 };

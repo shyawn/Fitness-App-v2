@@ -40,6 +40,19 @@ const workoutSlice = createSlice({
         });
       });
     },
+    setSupersetGroup: (
+      state,
+      action: PayloadAction<{
+        workoutId: string;
+        supersetGroup: string | null;
+      }>,
+    ) => {
+      const { workoutId, supersetGroup } = action.payload;
+      const index = state.findIndex((item) => item.id === workoutId);
+      if (index !== -1) {
+        state[index].supersetGroup = supersetGroup;
+      }
+    },
   },
 });
 
@@ -50,5 +63,6 @@ export const {
   setWorkoutOrder,
   editWorkoutSets,
   resetWorkoutSets,
+  setSupersetGroup,
 } = workoutSlice.actions;
 export default workoutSlice.reducer;

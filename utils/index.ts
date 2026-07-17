@@ -65,3 +65,17 @@ export const formatJoinDate = (date: Date) => {
     year: "numeric",
   });
 };
+
+const SUPERSET_LETTERS = ["A", "B", "C", "D", "E", "F"];
+
+export const nextSupersetGroup = (
+  day: string,
+  workoutList: { day: string; supersetGroup?: string | null }[],
+) => {
+  const used = new Set(
+    workoutList
+      .filter((w) => w.day === day && w.supersetGroup)
+      .map((w) => w.supersetGroup),
+  );
+  return SUPERSET_LETTERS.find((letter) => !used.has(letter)) ?? Date.now().toString();
+};
