@@ -3,7 +3,6 @@ import { View, Text } from "react-native";
 import ScheduleSwiper from "./ScheduleSwiper";
 import ProfileIcon from "./common/ProfileIcon";
 import { useRouter } from "expo-router";
-import { useUser } from "@clerk/clerk-expo";
 import { Typography } from "@/constants/typography";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -14,7 +13,6 @@ interface HomeNavProps {
 
 const HomeNav = ({ title }: HomeNavProps) => {
   const router = useRouter();
-  const { user } = useUser();
   const { username } = useSelector((state: RootState) => state.profile);
   const isHomePage = title === "Home";
 
@@ -26,7 +24,7 @@ const HomeNav = ({ title }: HomeNavProps) => {
 
           {isHomePage && (
             <Text className="capitalize">
-              {username ? username.split(" ")[0] : user?.firstName || "Athlete"}
+              {username ? username.split(" ")[0] : "Athlete"}
               !
             </Text>
           )}

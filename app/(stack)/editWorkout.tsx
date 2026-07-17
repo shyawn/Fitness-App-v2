@@ -16,6 +16,7 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { Workout, WorkoutSetType, WorkoutType } from "@/types";
 import SearchWorkout from "@/components/editWorkout/SearchWorkout";
 import WorkoutSet from "@/components/editWorkout/WorkoutSet";
+import WorkoutInput from "@/components/editWorkout/WorkoutInput";
 import BaseButton from "@/components/common/BaseButton";
 import { useDispatch } from "react-redux";
 import { addWorkout, storeEditWorkout } from "@/store/workoutPlan/workoutSlice";
@@ -32,6 +33,7 @@ const emptyWorkout: Workout = {
   type: "",
   sets: [],
   remarks: "",
+  restSeconds: undefined,
 };
 
 const editWorkout = () => {
@@ -53,6 +55,11 @@ const editWorkout = () => {
         ? (JSON.parse(params.sets) as WorkoutSetType[])
         : [],
     remarks: getParamValue(params.remarks),
+    restSeconds: getParamValue(params.restSeconds)
+      ? Number(getParamValue(params.restSeconds))
+      : undefined,
+    muscleGroup: getParamValue(params.muscleGroup) || undefined,
+    supersetGroup: getParamValue(params.supersetGroup) || null,
   };
 
   const [workout, setWorkout] = useState<Workout>(item ? item : emptyWorkout);
@@ -138,6 +145,27 @@ const editWorkout = () => {
               error={error !== ""}
               setWorkout={setWorkout}
             />
+
+            <View style={styles.divider} />
+
+            <View className="px-6 mb-4">
+              <Text className="mb-2 font-semibold text-[18px] text-gray-500">
+                Rest Timer
+              </Text>
+              <WorkoutInput
+                value={workout.restSeconds?.toString() ?? ""}
+                placeholder="Rest duration in seconds"
+                rightLabel="sec"
+                isWholeNumber
+                error={false}
+                onChangeText={(text) =>
+                  setWorkout({
+                    ...workout,
+                    restSeconds: text === "" ? undefined : Number(text),
+                  })
+                }
+              />
+            </View>
 
             <View style={styles.divider} />
 

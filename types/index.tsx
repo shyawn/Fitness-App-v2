@@ -12,7 +12,10 @@ export type Workout = {
   type: WorkoutType;
   sets: WorkoutSetType[];
   remarks?: string;
-  priority?: number;
+  priority?: boolean;
+  restSeconds?: number;
+  muscleGroup?: string;
+  supersetGroup?: string | null;
 };
 
 export type WorkoutType = "Weights" | "Cable" | "Bodyweight" | "";
@@ -34,3 +37,16 @@ export type BodyPartExercise = {
 };
 
 export type GenderType = "Male" | "Female" | "Other" | "";
+
+export type ProgramExercise = {
+  day: number;
+  order: number;
+  name: string;
+  sets: number;
+  reps: number;
+  muscleGroup: string;
+  priority: boolean;
+  supersetGroup: string | null;
+  restSeconds: number;
+  notes: string;
+};

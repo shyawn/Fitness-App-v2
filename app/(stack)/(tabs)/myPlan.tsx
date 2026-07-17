@@ -1,12 +1,13 @@
 import DraggableList from "@/components/DraggableList";
 import { RootState } from "@/store/store";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { setWorkoutOrder } from "@/store/workoutPlan/workoutSlice";
 import { Workout } from "@/types";
 import { StatusBar } from "expo-status-bar";
 import HomeNav from "@/components/HomeNav";
+import RestTimerBar from "@/components/RestTimerBar";
 import moment from "moment";
 import Ionicons from "@react-native-vector-icons/ionicons";
 
@@ -17,7 +18,7 @@ export default function MyPlan() {
   const dispatch = useDispatch();
 
   const filteredWorkoutList = workoutList.filter((item) =>
-    item.day.includes(day),
+    item.day.includes(day)
   );
 
   return (
@@ -30,6 +31,8 @@ export default function MyPlan() {
       <View style={styles.container}>
         <HomeNav title="My Plan" />
 
+        <RestTimerBar />
+
         {filteredWorkoutList.length === 0 ? (
           <View style={styles.emptyContainer}>
             <Ionicons name="barbell-sharp" color="#999" size={38} />
@@ -39,17 +42,12 @@ Remember to get sufficient rest!`}
             </Text>
           </View>
         ) : (
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            className="mb-20 h-4/5"
-          >
-            <DraggableList
-              selectedDay={day} // To filter by selected day
-              onReordered={(updatedData: Workout[]) => {
-                dispatch(setWorkoutOrder(updatedData));
-              }}
-            />
-          </ScrollView>
+          <DraggableList
+            selectedDay={day} // To filter by selected day
+            onReordered={(updatedData: Workout[]) => {
+              dispatch(setWorkoutOrder(updatedData));
+            }}
+          />
         )}
       </View>
     </SafeAreaView>
@@ -59,8 +57,7 @@ Remember to get sufficient rest!`}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    width: "100%",
   },
   emptyContainer: {
     top: "50%",

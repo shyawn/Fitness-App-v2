@@ -16,6 +16,7 @@ import macrosReducer from "./macros/macroSlice";
 import hydrationReducer from "./hydration/hydrationSlice";
 import profileReducer from "./profile/profileSlice";
 import resetReducer from "./reset/resetSlice";
+import restTimerReducer from "./restTimer/restTimerSlice";
 
 const rootReducer = combineReducers({
   workout: workoutReducer,
@@ -24,11 +25,13 @@ const rootReducer = combineReducers({
   hydration: hydrationReducer,
   profile: profileReducer,
   reset: resetReducer,
+  restTimer: restTimerReducer,
 });
 
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
+  blacklist: ["restTimer"],
   // version: 1,
   // storage: reduxStorage,
   // timeout: 0,

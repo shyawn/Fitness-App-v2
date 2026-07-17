@@ -1,16 +1,7 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-  ScrollView,
-  Image,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@react-native-vector-icons/ionicons";
-import { useAuth, useUser } from "@clerk/clerk-expo";
 import { Typography } from "@/constants/typography";
 import { formatJoinDate } from "@/utils";
 import { profileSettings } from "@/constants";
@@ -20,22 +11,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 export default function Profile() {
-  const { signOut } = useAuth();
-  const { user } = useUser();
   const router = useRouter();
   const { username } = useSelector((state: RootState) => state.profile);
 
-  const joinDate = user?.createdAt ? new Date(user.createdAt) : new Date();
-  const daysSinceJoining = Math.floor(
-    (new Date().getTime() - joinDate.getTime()) / (1000 * 60 * 60 * 24),
-  );
-
-  const handleSignOut = () => {
-    Alert.alert("Sign Out", "Are you sure you want to sign out?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Sign Out", style: "destructive", onPress: () => signOut() },
-    ]);
-  };
+  const joinDate = new Date();
 
   return (
     <SafeAreaView className="flex flex-1">
@@ -59,24 +38,11 @@ export default function Profile() {
           <View className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <View className="flex-row items-center">
               <View className="w-16 h-16 bg-[#999] rounded-full items-center justify-center mr-4">
-                <Image
-                  source={{
-                    uri: user?.externalAccounts[0]?.imageUrl ?? user?.imageUrl,
-                  }}
-                  className="rounded-full"
-                  style={{ width: 64, height: 64 }}
-                />
+                <Ionicons name="person-sharp" size={28} color="#fff" />
               </View>
               <View className="flex-1">
                 <Text className="text-xl font-semibold text-gray-900">
-                  {username !== ""
-                    ? username
-                    : user?.firstName && user?.lastName
-                      ? `${user.firstName} ${user.lastName}`
-                      : user?.firstName || "User"}
-                </Text>
-                <Text className="text-gray-600">
-                  {user?.emailAddresses?.[0]?.emailAddress}
+                  {username !== "" ? username : "User"}
                 </Text>
                 <Text className="text-sm text-gray-500 mt-1">
                   Member since {formatJoinDate(joinDate)}
@@ -162,21 +128,6 @@ export default function Profile() {
             </View>
           </View>
         ))}
-
-        <View className="px-6 mb-6">
-          <TouchableOpacity
-            onPress={handleSignOut}
-            className="bg-[#f7f3f3] rounded-2xl p-4 shadow-md"
-            activeOpacity={0.8}
-          >
-            <View className="flex-row items-center">
-              <Ionicons name="log-out-outline" size={20} color="#404040" />
-              <Text style={Typography.body} className="font-semibold ml-3">
-                Sign Out
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
 
         <Text style={[Typography.smallBody, styles.versionText]}>
           VERSION {Application.nativeApplicationVersion}

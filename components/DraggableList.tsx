@@ -1,4 +1,10 @@
-import { Pressable, Text, TouchableOpacity, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import DragList, { DragListRenderItemInfo } from "react-native-draglist";
 import { Workout } from "@/types";
 import {
@@ -12,10 +18,20 @@ import {
   deleteWorkout,
   editWorkoutSets,
 } from "@/store/workoutPlan/workoutSlice";
+import { startTimer } from "@/store/restTimer/restTimerSlice";
 import { useRouter } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { useState } from "react";
 import WorkoutSetComp from "./editWorkout/WorkoutSetComp";
+
+const supersetColors: Record<string, string> = {
+  A: "#f43f5e",
+  B: "#3b82f6",
+  C: "#22c55e",
+  D: "#f59e0b",
+};
+
+const getSupersetColor = (group: string) => supersetColors[group] ?? "#a855f7";
 
 interface DraggableProps {
   selectedDay: string;
@@ -63,93 +79,153 @@ export default function DraggableList({
       item.sets.length > 0 &&
       item.sets.every((set) => set.done === true);
 
+    const supersetColor = item.supersetGroup
+      ? getSupersetColor(item.supersetGroup)
+      : null;
+
     return (
       <View
-        className="my-1 border-[1px] bg-white border-[#A9A9A9] rounded-lg overflow-hidden"
+        className="my-1 border-[1px] bg-white border-[#A9A9A9] rounded-lg overflow-hidden flex-row"
         style={workoutComplete && { backgroundColor: "#D0F0C0" }}
       >
-        <Pressable
-          key={item.id}
-          onPress={() => setExpandedId(isOpen ? null : item.id)}
-          onLongPress={() => {
-            onDragStart();
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-          }}
-          onPressOut={onDragEnd}
-          className="p-3"
-        >
-          <View
-            className="w-full flex flex-row justify-between items-center"
-            style={isOpen && { marginBottom: 10 }}
-          >
-            <View className="flex">
-              <Text className="font-semibold text-[16px] capitalize mb-1">
-                {item.name}
-              </Text>
-              <Text className="text-[#636363]">
-                {Array.isArray(item?.sets) ? item.sets.length : 0} sets &bull;{" "}
-                {Array.isArray(item?.sets)
-                  ? item.sets.filter((set) => set.done).length
-                  : 0}{" "}
-                completed
-              </Text>
-            </View>
-
-            <View className="flex flex-row gap-4">
-              <TouchableOpacity
-                style={{ height: hp(4), width: hp(4) }}
-                className="bg-[#999] rounded-full items-center justify-center"
-                onPress={() =>
-                  router.push({
-                    pathname: "/editWorkout",
-                    params: { ...item, sets: JSON.stringify(item.sets) },
-                  })
-                }
-              >
-                <Ionicons name="pencil" size={wp(4)} color="white" />
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{ height: hp(4), width: hp(4) }}
-                className="bg-rose-500 rounded-full items-center justify-center"
-                onPress={() => {
-                  dispatch(deleteWorkout(item));
-                }}
-              >
-                <Ionicons name="trash" size={hp(2.5)} color="white" />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Pressable>
-
-        {isOpen && (
-          <View className="px-3 pb-3">
-            <WorkoutSetComp
-              workout={item}
-              nested={true}
-              setWorkout={handleUpdateRedux}
-            />
-          </View>
+        {supersetColor && (
+          <View style={{ width: 4, backgroundColor: supersetColor }} />
         )}
+        <View className="flex-1">
+          <Pressable
+            key={item.id}
+            onPress={() => setExpandedId(isOpen ? null : item.id)}
+            onLongPress={() => {
+              onDragStart();
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            }}
+            onPressOut={onDragEnd}
+            className="p-3"
+          >
+            <View
+              className="w-full flex flex-row justify-between items-center"
+              style={isOpen && { marginBottom: 10 }}
+            >
+              <View className="flex flex-1 pr-2">
+                <View className="flex-row items-center gap-2 mb-1">
+                  <Text className="font-semibold text-[16px] capitalize">
+                    {item.name}
+                  </Text>
+                  {item.supersetGroup && (
+                    <View
+                      style={[
+                        styles.supersetPill,
+                        { backgroundColor: supersetColor ?? "#a855f7" },
+                      ]}
+                    >
+                      <Text className="text-white text-[10px] font-semibold">
+                        Superset {item.supersetGroup}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+                <Text className="text-[#636363]">
+                  {Array.isArray(item?.sets) ? item.sets.length : 0} sets &bull;{" "}
+                  {Array.isArray(item?.sets)
+                    ? item.sets.filter((set) => set.done).length
+                    : 0}{" "}
+                  completed
+                </Text>
+              </View>
+
+              <View className="flex flex-row gap-4">
+                <TouchableOpacity
+                  style={{ height: hp(4), width: hp(4) }}
+                  className="bg-[#404040] rounded-full items-center justify-center"
+                  onPress={() =>
+                    dispatch(
+                      startTimer({
+                        workoutId: item.id,
+                        label: item.name,
+                        totalSeconds: item.restSeconds || 60,
+                      })
+                    )
+                  }
+                >
+                  <Ionicons name="timer-outline" size={wp(4.5)} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ height: hp(4), width: hp(4) }}
+                  className="bg-[#999] rounded-full items-center justify-center"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/editWorkout",
+                      params: {
+                        ...item,
+                        sets: JSON.stringify(item.sets),
+                        priority: item.priority ? "true" : "",
+                      },
+                    })
+                  }
+                >
+                  <Ionicons name="pencil" size={wp(4)} color="white" />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ height: hp(4), width: hp(4) }}
+                  className="bg-rose-500 rounded-full items-center justify-center"
+                  onPress={() => {
+                    dispatch(deleteWorkout(item));
+                  }}
+                >
+                  <Ionicons name="trash" size={hp(2.5)} color="white" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Pressable>
+
+          {isOpen && (
+            <View className="px-3 pb-3">
+              <WorkoutSetComp
+                workout={item}
+                nested={true}
+                setWorkout={handleUpdateRedux}
+              />
+            </View>
+          )}
+        </View>
       </View>
     );
   }
 
   function reorderWorkout(fromIndex: number, toIndex: number) {
-    const reorderedList = [...workoutList]; // Make a copy of store data instead of modifying
-    const [movedItem] = reorderedList.splice(fromIndex, 1);
-    reorderedList.splice(toIndex, 0, movedItem); // Insert movedItem at new position to reorder
+    // Reorder within the filtered (today's) list, then splice the result
+    // back into the full list at the original filtered-day positions —
+    // reordering against the full list's indices was moving the wrong item
+    // whenever other days had workouts in the store.
+    const reorderedFiltered = [...filteredWorkouts];
+    const [movedItem] = reorderedFiltered.splice(fromIndex, 1);
+    reorderedFiltered.splice(toIndex, 0, movedItem);
+
+    let cursor = 0;
+    const reorderedList = workoutList.map((item) =>
+      item.day.includes(selectedDay) ? reorderedFiltered[cursor++] : item
+    );
     onReordered(reorderedList);
   }
 
   return (
-    <View className="px-6">
-      <DragList
-        data={filteredWorkouts}
-        keyExtractor={(item) => keyExtractor(item)}
-        onReordered={reorderWorkout}
-        renderItem={renderItem}
-      />
-    </View>
+    <DragList
+      data={filteredWorkouts}
+      keyExtractor={(item) => keyExtractor(item)}
+      onReordered={reorderWorkout}
+      renderItem={renderItem}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={{ paddingHorizontal: 24, paddingBottom: 100 }}
+    />
   );
 }
+
+const styles = StyleSheet.create({
+  supersetPill: {
+    borderRadius: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+  },
+});

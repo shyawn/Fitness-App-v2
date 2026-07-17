@@ -17,14 +17,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useRouter } from "expo-router";
 import { updateUsername } from "@/store/profile/profileSlice";
-import { useUser } from "@clerk/clerk-expo";
 
 export default function EditUsername() {
   const { username } = useSelector((state: RootState) => state.profile);
-  const { user } = useUser();
-  const signInName = `${user?.firstName} ${user?.lastName}`;
   const [isFocus, setIsFocus] = useState(false);
-  const [adjustedName, setAdjustedName] = useState(username ?? signInName);
+  const [adjustedName, setAdjustedName] = useState(username ?? "");
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -59,7 +56,7 @@ export default function EditUsername() {
                 ]}
               >
                 <TextInput
-                  placeholder={username ?? signInName}
+                  placeholder={username ?? ""}
                   placeholderTextColor="#999"
                   value={adjustedName}
                   keyboardType="default"

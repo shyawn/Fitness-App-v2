@@ -115,10 +115,11 @@ export default function ScheduleSwiper({ workout }: { workout: boolean }) {
 
   return (
     <>
-      <View className="max-h-[74px]">
+      <View style={{ height: 74 }}>
         <Swiper
           index={1}
           ref={swiper}
+          containerStyle={{ height: 74 }}
           showsPagination={false}
           loop={false}
           onIndexChanged={handleIndexChange}
