@@ -3,7 +3,7 @@ import { Typography } from "@/constants/typography";
 import { Workout, WorkoutSetType } from "@/types";
 import { isEmptyWorkoutInput } from "@/utils";
 import Ionicons from "@react-native-vector-icons/ionicons";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   View,
   Text,
@@ -31,21 +31,37 @@ const IndivSetComp = ({
   setWorkout,
   onDelete,
 }: IndivSetCompProps) => {
+  // Kept local so typing doesn't propagate to the parent (and Redux) on
+  // every keystroke — when this row lives inside DraggableList's DragList,
+  // any Redux update gives the list a new `data` reference, which makes
+  // react-native-draglist bump its internal row keys and remount the row,
+  // dropping keyboard focus mid-edit. Committing on blur avoids that.
+  const [repsText, setRepsText] = useState(set.reps);
+  const [weightText, setWeightText] = useState(set.weight);
+
+  const commit = (field: "reps" | "weight", text: string) => {
+    setWorkout((prev) => ({
+      ...prev,
+      sets: prev.sets.map((item) =>
+        item.id === set.id ? { ...item, [field]: text } : item,
+      ),
+    }));
+  };
+
   const handleChange = (field: "reps" | "weight", text: string) => {
     const regex = field === "reps" ? REGEX.WHOLE_NUMBER : REGEX.WEIGHT;
-
     if (text === "" || regex.test(text)) {
-      setWorkout((prev) => ({
-        ...prev,
-        sets: prev.sets.map((item) =>
-          item.id === set.id ? { ...item, [field]: text } : item,
-        ),
-      }));
+      if (field === "reps") setRepsText(text);
+      else setWeightText(text);
     }
   };
 
   const handleDone = () => {
-    if (!isEmptyWorkoutInput(set.reps) && !isEmptyWorkoutInput(set.weight)) {
+    // Commit any pending edits so "done" reflects exactly what's shown.
+    commit("reps", repsText);
+    commit("weight", weightText);
+
+    if (!isEmptyWorkoutInput(repsText) && !isEmptyWorkoutInput(weightText)) {
       setWorkout((prev) => ({
         ...prev,
         sets: prev.sets.map((item) =>
@@ -72,9 +88,10 @@ const IndivSetComp = ({
             style={styles.inputContainer}
             placeholder="0"
             placeholderTextColor="#999"
-            value={set.reps.toString()}
+            value={repsText}
             keyboardType="decimal-pad"
             onChangeText={(text) => handleChange("reps", text)}
+            onEndEditing={() => commit("reps", repsText)}
           />
         </View>
 
@@ -86,9 +103,10 @@ const IndivSetComp = ({
             style={styles.inputContainer}
             placeholder="0"
             placeholderTextColor="#999"
-            value={set.weight.toString()}
+            value={weightText}
             keyboardType="decimal-pad"
             onChangeText={(text) => handleChange("weight", text)}
+            onEndEditing={() => commit("weight", weightText)}
           />
         </View>
       </View>
